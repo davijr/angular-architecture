@@ -1,0 +1,62 @@
+<p>edition-panel works!</p>
+
+<div class="card mt-3">
+    <div class="card-header">
+      <div class="float-left">
+        <h3>Items</h3>
+      </div>
+      <div class="float-right">
+        <button mat-raised-button color="primary" [routerLink]="['novo']">Novo Curso</button>
+        <button mat-raised-button color="accent" (click)="onRefresh()">Atualizar</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <table class="table table-hover" *ngIf="items$ | async as items; else loadingError, loading">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Item</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of items">
+            <td>{{ item.id }}</td>
+            <td>{{ item.name }}</td>
+            <td>
+              <span class="float-right">
+                <button mat-raised-button color="primary" class="mb-1 btn-sm" (click)="onEdit(item.id)">
+                  Atualizar
+                </button>
+  
+                <button mat-raised-button color="warning" class="mb-1 btn-sm" (click)="onDelete(item)">
+                  Remover
+                </button>
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+  
+      <ng-template #loading>
+        <span>Loading items...</span>
+      </ng-template>
+  
+      <ng-template #loadingError>
+        <div *ngIf="error$ | async; else loading" >
+          Erro ao carregar items. Tente novamente mais tarde.
+        </div>
+        <ng-template #loading>
+            <span>Loading items...</span>
+        </ng-template>
+      </ng-template>
+    </div>
+  </div>
+  
+  <ng-template #deleteModal>
+    <div class="modal-body text-center">
+      <p>Tem certeza que deseja remover esse item?</p>
+      <button type="button" class="btn btn-default" (click)="onConfirmDelete()">Sim</button>
+      <button type="button" class="btn btn-primary" (click)="onDeclineDelete()">Nao</button>
+    </div>
+  </ng-template>
