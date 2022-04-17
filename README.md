@@ -34,3 +34,6 @@ https://youtu.be/jEfqP31cBuI
 
 Angular App from Scratch - 2/n - Organizing Modules, Styles and Node
 https://youtu.be/_uHmwi4Kp4w
+
+Dynamic Forms
+https://angular.io/guide/dynamic-form

@@ -1,9 +1,12 @@
-import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { SharedModule } from '../shared/shared.module';
 import { EditionPanelComponent } from './edition-panel/edition-panel.component';
 import { EditionRoutingModule } from './edition.routing';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -12,8 +15,11 @@ import { MatButtonModule } from '@angular/material/button';
   imports: [
     CommonModule,
     EditionRoutingModule,
-    BrowserAnimationsModule,
-    MatButtonModule
+    ReactiveFormsModule,
+    SharedModule,
+    MatSidenavModule,
+    MatButtonModule,
+    MatIconModule
   ]
 })
 export class EditionModule { }

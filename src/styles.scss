@@ -1,7 +1,27 @@
-
 @import '_theme';
 @import '_bootstrap';
 @import '_variables';
+@import '_scrollbar';
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+snack-bar-container {
+  padding: 0 !important;
+  min-width: 400px !important;
+  height: 54px !important;
+  border: none !important;
+  min-height: 0 !important;
+}
+
+snack-bar-container>div,
+snack-bar-container>div>div {
+  height: auto !important;
+}

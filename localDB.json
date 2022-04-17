@@ -1,20 +1,60 @@
 {
-    "items": [
+    "sysExternalSystem": { "data": [
         {
-            "id": "1",
-            "name": "Item A"
-        }, {
-            "id": "2",
-            "name": "Item B"
-        }, {
-            "id": "3",
-            "name": "Item C"
-        }, {
-            "id": "4",
-            "name": "Item D"
-        }, {
-            "id": "5",
-            "name": "Item E"
+            "sourceSystem": "CARM",
+            "sourceSystemName": "Carm: Risk Management Grp System",
+            "systemType": "OP"
+        },
+        {
+            "sourceSystem": "CHANGE",
+            "sourceSystemName": "Exchange: Forex System",
+            "systemType": "BO"
+        },
+        {
+            "sourceSystem": "CHANGE_CONTRAG",
+            "sourceSystemName": "Change: Guarantees - Received",
+            "systemType": "BO"
+        },
+        {
+            "sourceSystem": "CHANGE_CONTRATOS",
+            "sourceSystemName": "Change: Guarantees - Received",
+            "systemType": "BO"
+        },
+        {
+            "sourceSystem": "CHANGE_EXP-CREDOC",
+            "sourceSystemName": "Change: Guarantees - Received",
+            "systemType": "OP"
+        },
+        {
+            "sourceSystem": "CHANGE_GAR-PRESTADA",
+            "sourceSystemName": "Change: Guarantees - Received",
+            "systemType": "CL"
+        },
+        {
+            "sourceSystem": "CHANGE_IMP-CREDOC",
+            "sourceSystemName": "Change: Guarantees - Received",
+            "systemType": "OP"
+        },
+        {
+            "sourceSystem": "CHANGE_INDEXC",
+            "sourceSystemName": "Change: Guarantees - Received",
+            "systemType": "BO"
+        },
+        {
+            "sourceSystem": "CHANGE_LIN",
+            "sourceSystemName": "Change: Guarantees - Received",
+            "systemType": "BO"
+        },
+        {
+            "sourceSystem": "CHANGE_LINHAS",
+            "sourceSystemName": "Change: Linhas",
+            "systemType": "OP"
         }
-    ]
+    ]},
+    "domsSystemType": { "data": [
+        { "domain": "BO", "domainDesc": "Back Office Source System" },
+        { "domain": "CL", "domainDesc": "Calculation System" },
+        { "domain": "FO", "domainDesc": "Front Office System (blooter)" },
+        { "domain": "OP", "domainDesc": "Consumer System (Receive data from the Data Model)" }
+    ]}
 }

@@ -1,5 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 import { BsModalRef } from 'ngx-bootstrap/modal';
+import { AlertService } from '../services/alert.service';
 
 @Component({
   selector: 'app-alert-modal',
@@ -8,15 +10,28 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 })
 export class AlertModalComponent implements OnInit {
 
-  @Input() type = 'info';
-  @Input() message: string = '';
+  @Input() type?: string;
+  @Input() title? = '';
+  @Input() message? = '';
 
-  constructor(public bsModalRef: BsModalRef) { }
+  constructor(
+    public bsModalRef: BsModalRef,
+    public snackBar: MatSnackBar,
+    public alertService: AlertService) {
+    }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    if (this.type == undefined) {
+      const alertOptions = this.alertService.getCurrentOptions();
+      this.type = alertOptions?.type;
+      this.title = alertOptions?.title;
+      this.message = alertOptions?.message;
+    }
+  }
 
   onClose() {
     this.bsModalRef.hide();
+    this.snackBar.dismiss();
   }
 
 }

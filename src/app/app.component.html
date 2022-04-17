@@ -1,11 +1,43 @@
+<!-- <nav matNav class="navbar navbar-expand-lg">
+  <a class="navbar-brand" href="#">HSBC brand</a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <!-- <li class="nav-item">
+        <a class="nav-link" routerLinkActive="active" [routerLink]="['/']">Home <span class="sr-only">(current)</span></a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLinkActive="active" [routerLink]="['/login']">Login</a>
+      </li> - ->
+      <li class="nav-item">
+        <a class="nav-link" routerLinkActive="active" [routerLink]="['edition', 'sysExternalSystem']">Sys External System</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLinkActive="active" [routerLink]="['edition', 'domsSystemType']">Doms System Type</a>
+      </li>
+    </ul>
+  </div>
+</nav> -->
 
-<h1>Home</h1>
+<mat-sidenav-container class="sidenav-container" (backdropClick)="close('backdrop')">
+  <mat-sidenav mode="push" class="sidenav" #sidenav (keydown.escape)="close('escape')" disableClose>
+    <p><button mat-button (click)="close('toggle button')">Toggle</button></p>
+  </mat-sidenav>
 
-<nav>
-    <a routerLink="/login">Login</a><br>
-    <a routerLink="/edition">Edition Panel</a>
-</nav>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button mat-icon-button class="example-icon" aria-label="Menu" (click)="sidenav.open()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>HSBC - BZDF Frontend</span>
+    </mat-toolbar>
+    <mat-progress-bar mode="indeterminate" color="accent" *ngIf="isLoading()"></mat-progress-bar>
+    <div class="container">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>
 
-<br><br>
 
-<router-outlet></router-outlet>

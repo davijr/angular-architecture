@@ -4,7 +4,7 @@ import { EditionPanelComponent } from "./edition-panel/edition-panel.component";
 
 
 const editionRoutes: Routes = [
-    { path: 'edition', component: EditionPanelComponent},
+    { path: 'edition/:editionModel', component: EditionPanelComponent},
 ]
 
 @NgModule({

@@ -1,0 +1,38 @@
+
+<!-- 
+    TODO:
+    1- Tooltip position and color.
+    OK > 2- Css for turn borders to red on invalid fields.
+    OK > 3- Include red * to required fields.
+    OK > 4- combobox
+    5- Submit validation.
+    6- Modificar subscribe dos combos por async pipes (utilizando observable)
+ -->
+
+<div>
+    <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="form-group" *ngFor="let field of model?.fields" [ngClass]="applyCssError(field.name)">
+            <div *ngIf="['text', 'number', 'email'].includes(field.type)">
+                <label for="{{ field.name }}">{{ field.label }}<span class="required">{{ isRequired(field.name) ? ' *' : '' }}</span></label>
+                <input type="{{ field.type }}" id="{{ field.name }}" class="form-control" [ngClass]="applyCssError(field.name)"
+                    placeholder="{{ field.label }}" formControlName="{{ field.name }}"
+                    tooltip="{{ validationMessage(field.name) }}" maxlength="{{ field.length }}">
+            </div>
+            <div *ngIf="['relationship'].includes(field.type)">
+                <label for="{{ field.name }}">{{ field.label }}<span class="required">{{ isRequired(field.name) ? ' *' : '' }}</span></label>
+                <select name="{{ field.name }}" id="{{ field.name }}" class="form-control"
+                    formControlName="{{ field.name }}" [ngClass]="applyCssError(field.name)">
+                    <option [value]="null">Select</option>
+                    <option *ngFor="let item of getOptions(field.relationship?.name ?? '')" [value]="item[field.relationship?.idAttribute ?? '']">
+                        {{ getShowFields(field.relationship?.name ?? '', item) }}
+                    </option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <button class="btn btn-primary" [disabled]="!form.valid">Submit</button>
+        </div>
+    </form>
+
+    <app-debug-form [form]="form" *ngIf="debugForms"></app-debug-form>
+</div>

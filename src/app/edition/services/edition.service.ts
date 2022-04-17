@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { delay, take, tap } from 'rxjs';
+import { take } from 'rxjs';
 import { ApiService } from 'src/app/core/services/api.service';
-import { Item } from 'src/app/model/item';
+import { RequestModel } from 'src/app/model/utils/RequestModel';
+import { ResponseModel } from 'src/app/model/utils/ResponseModel';
 
 
 @Injectable({
@@ -11,17 +12,20 @@ export class EditionService {
 
   constructor(private apiService: ApiService) {}
 
-  list() {
-    return this.apiService.getRequest<Item[]>('items')
-      .pipe(
-        delay(2000),
-        take(1),
-        tap((item: any) => console.log(item))
-      );
+  list(request: RequestModel) {
+    return this.apiService.getRequest<ResponseModel>(request.model).pipe(take(1));
   }
 
-  add(item: Item): Item {
-    return {id: 1, name: 'Item 1'};
+  add(request: RequestModel) {
+    return this.apiService.postRequest<RequestModel>(request.model, request.data).pipe(take(1));
+  }
+
+  update(request: RequestModel) {
+    return this.apiService.putRequest<RequestModel>(request.model, request.data).pipe(take(1));
+  }
+
+  remove(request: RequestModel) {
+    return this.apiService.deleteRequest<RequestModel>(`${request.model}/${request.data}`).pipe(take(1));
   }
 
 }
