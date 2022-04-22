@@ -1,11 +1,46 @@
-.container {
-  margin-top: 1rem;
-}
-
-mat-sidenav {
-  width: 300px;
-}
 
 mat-sidenav-container {
   height: 100%;
+
+  mat-sidenav {
+    width: 300px;
+
+    .btn-close-container {
+      padding: 1rem;
+    }
+
+    .title-container {
+      p {
+        padding: 1rem 1rem 0 1rem;
+      }
+      div ul li {
+        border-radius: 0;
+      }
+    }
+  }
+
+  mat-sidenav-content {
+    background-color: rgb(240 240 240);
+
+    .container {
+      margin-top: 16px;
+
+      &.loading-margin {
+        margin-top: 20px;
+      }
+    }
+
+  }
+}
+
+accordion-group {
+  .accordion-menu {
+    .panel-heading, .card-header {
+      padding: 0 !important;
+    }
+    .btn-link {
+      text-decoration: none !important;
+      color: #000 !important;
+    }
+  }
 }

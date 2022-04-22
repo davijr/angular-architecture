@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
+import { Observable } from 'rxjs';
 import { AlertOptions } from 'src/app/model/utils/AlertOptions';
 import { AlertModalComponent } from 'src/app/shared/alert-modal/alert-modal.component';
+import { PromptModalComponent } from '../prompt-modal/prompt-modal.component';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +15,14 @@ export class AlertService {
   private alertOptions?: AlertOptions;
 
   private readonly alertModalConfig: ModalOptions = {
-    backdrop: false,
-    ignoreBackdropClick: true
+    // backdrop: false,
+    // ignoreBackdropClick: true
+  };
+
+  private readonly promptModalConfig: ModalOptions = {
+    // backdrop: false,
+    ignoreBackdropClick: true,
+    class: 'modal-sm'
   };
 
   private readonly alertSnackbarConfig: MatSnackBarConfig = {
@@ -25,9 +33,11 @@ export class AlertService {
 
   constructor(
     private modalService: BsModalService,
-    private snackBar: MatSnackBar
-  ) {
-    // this.modalService._hideBackdrop();
+    private snackBar: MatSnackBar) { }
+
+  prompt(message?: string): Observable<any> {
+    this.bsModalRef = this.modalService.show(PromptModalComponent, this.promptModalConfig);
+    return this.bsModalRef.content.confirm;
   }
 
   modalError(message: string) {

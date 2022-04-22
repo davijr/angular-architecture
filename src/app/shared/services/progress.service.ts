@@ -10,7 +10,7 @@ import { Injectable } from "@angular/core";
 
     constructor() { }
 
-    public getStatus() {
+    public isLoading() {
       return this.loading;
     }
 

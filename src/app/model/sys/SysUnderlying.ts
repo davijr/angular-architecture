@@ -1,5 +1,5 @@
 import { DomsAccrualBasis } from "../doms/DomsAccrualBasis";
-import { Field, Model, Relationship } from "../utils/Model";
+import { Field, Model, Relationship } from "../Model";
 import { SysCurrency } from "./SysCurrency";
 import { SysUnderlyingType } from "./SysUnderlyingType";
 
@@ -16,6 +16,7 @@ export class SysUnderlying implements Model {
 
     constructor() {}
 
+    public readonly idField = 'underlyingCode';
     public readonly fields: Field[] = [
         {
             name: 'underlyingCode',

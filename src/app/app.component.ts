@@ -9,13 +9,13 @@ import { ProgressService } from './shared/services/progress.service';
   preserveWhitespaces: true
 })
 export class AppComponent {
-  title = 'my-app';
+  title = 'HSBC - BZDF Frontend';
 
   @ViewChild('sidenav') sidenav!: MatSidenav;
 
   reason = '';
 
-  constructor(private progressService: ProgressService) {}
+  constructor(public progressService: ProgressService) {}
 
   close(reason: string) {
     this.reason = reason;
@@ -23,6 +23,59 @@ export class AppComponent {
   }
 
   isLoading() {
-    return this.progressService.getStatus();
+    return this.progressService.isLoading();
+  }
+
+  getMenuOptions() {
+    return [
+      {
+        name: 'SYS',
+        active: true,
+        items: [
+          { name: 'Sys External System', route: 'edition', param: 'SysExternalSystem', active: true },
+          { name: '', route: '', param: '', active: false },
+        ]
+      },
+      {
+        name: 'COMPANY',
+        active: false,
+        items: [
+          { name: '', route: '', param: '', active: false },
+          { name: '', route: '', param: '', active: false },
+        ]
+      },
+      {
+        name: 'INVPTY',
+        active: false,
+        items: [
+          { name: '', route: '', param: '', active: false },
+          { name: '', route: '', param: '', active: false },
+        ]
+      },
+      {
+        name: 'MKTD',
+        active: false,
+        items: [
+          { name: '', route: '', param: '', active: false },
+          { name: '', route: '', param: '', active: false },
+        ]
+      },
+      {
+        name: 'PRODUCT',
+        active: false,
+        items: [
+          { name: '', route: '', param: '', active: false },
+          { name: '', route: '', param: '', active: false },
+        ]
+      },
+      {
+        name: 'DOMS',
+        active: true,
+        items: [
+          { name: 'Doms System Type', route: 'edition', param: 'DomsSystemType', active: true },
+          { name: '', route: '', param: '', active: false },
+        ]
+      },
+    ]
   }
 }

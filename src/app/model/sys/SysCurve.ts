@@ -1,8 +1,8 @@
 import { DomsAccrualBasis } from "../doms/DomsAccrualBasis";
-import { Field, Model, Relationship } from "../utils/Model";
+import { Field, Model, Relationship } from "../Model";
 import { SysCurrency } from "./SysCurrency";
 
-export class SysExternalSystem implements Model {
+export class SysCurve implements Model {
     
     curveName!: string;
     curveDescription!: string;
@@ -11,6 +11,7 @@ export class SysExternalSystem implements Model {
 
     constructor() {}
 
+    public readonly idField = 'curveName';
     public readonly fields: Field[] = [
         {
             name: 'curveName',

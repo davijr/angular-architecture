@@ -1,12 +1,13 @@
-import { Field, Model } from "../utils/Model";
+import { Field, Model } from "../Model";
 
 export class DomsSystemType implements Model {
     
     domain!: string;
-    domainName!: string;
+    domainDesc!: string;
 
     constructor() {};
     
+    public readonly idField = 'domain';
     public readonly fields: Field[] = [
         {
             name: 'domain',

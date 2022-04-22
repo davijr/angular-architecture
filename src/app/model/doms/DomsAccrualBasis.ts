@@ -1,4 +1,4 @@
-import { Field, Model } from "../utils/Model";
+import { Field, Model } from "../Model";
 
 export class DomsAccrualBasis implements Model {
     
@@ -7,6 +7,7 @@ export class DomsAccrualBasis implements Model {
 
     constructor() {};
     
+    public readonly idField = 'domain';
     public readonly fields: Field[] = [
         {
             name: 'domain',

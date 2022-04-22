@@ -1,4 +1,4 @@
-import { Field, Model } from "../utils/Model";
+import { Field, Model } from "../Model";
 
 export class SysUnderlyingType implements Model {
     
@@ -7,6 +7,7 @@ export class SysUnderlyingType implements Model {
 
     constructor() {};
     
+    public readonly idField = 'underlyingType';
     public readonly fields: Field[] = [
         {
             name: 'underlyingType',

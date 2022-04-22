@@ -1,4 +1,4 @@
-import { Field, Model, Relationship } from "../utils/Model";
+import { Field, Model, Relationship } from "../Model";
 import { DomsSystemType } from "../doms/DomsSystemType";
 
 export class SysExternalSystem implements Model {
@@ -9,6 +9,7 @@ export class SysExternalSystem implements Model {
 
     constructor() {}
 
+    public readonly idField = 'sourceSystem';
     public readonly fields: Field[] = [
         {
             name: 'sourceSystem',
@@ -26,7 +27,7 @@ export class SysExternalSystem implements Model {
             label: 'System Type',
             type: 'relationship',
             relationship: <Relationship> {
-                name: 'domsSystemType',
+                name: 'DomsSystemType',
                 showFields: ['domain', 'domainDesc'],
                 idAttribute: 'domain',
                 data: []

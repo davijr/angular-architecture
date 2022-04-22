@@ -1,5 +1,5 @@
 import { DomsCcyConvType } from "../doms/DomsCcyConvType";
-import { Field, Model, Relationship } from "../utils/Model";
+import { Field, Model, Relationship } from "../Model";
 
 export class SysCurrency implements Model {
     
@@ -12,6 +12,7 @@ export class SysCurrency implements Model {
 
     constructor() {};
     
+    public readonly idField = 'currencyCode';
     public readonly fields: Field[] = [
         {
             name: 'currencyCode',

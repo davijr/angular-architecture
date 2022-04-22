@@ -10,10 +10,12 @@ import { DebugFormComponent } from './debug-form/debug-form.component';
 import { TableFormComponent } from './table-form/table-form.component';
 
 import { OptionsService } from './services/options.service'
+import { PromptModalComponent } from './prompt-modal/prompt-modal.component';
 
 @NgModule({
   declarations: [
     AlertModalComponent,
+    PromptModalComponent,
     DebugFormComponent,
     TableFormComponent
   ],
@@ -26,9 +28,12 @@ import { OptionsService } from './services/options.service'
   ],
   exports: [
     AlertModalComponent,
+    PromptModalComponent,
     TableFormComponent
   ],
-  entryComponents: [AlertModalComponent],
+  entryComponents: [
+    AlertModalComponent,
+    PromptModalComponent],
   providers: [OptionsService]
 })
 export class SharedModule { }

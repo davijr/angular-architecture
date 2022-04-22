@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { take } from 'rxjs';
+import { map, take } from 'rxjs';
 import { ApiService } from 'src/app/core/services/api.service';
 import { RequestModel } from 'src/app/model/utils/RequestModel';
 import { ResponseModel } from 'src/app/model/utils/ResponseModel';
@@ -10,22 +10,24 @@ import { ResponseModel } from 'src/app/model/utils/ResponseModel';
 })
 export class EditionService {
 
+  private readonly BASE_URL = 'edition';
+
   constructor(private apiService: ApiService) {}
 
-  list(request: RequestModel) {
-    return this.apiService.getRequest<ResponseModel>(request.model).pipe(take(1));
+  find(request: RequestModel) {
+    return this.apiService.getRequest<ResponseModel>(`${this.BASE_URL}/${request.model}`).pipe(take(1));
   }
 
-  add(request: RequestModel) {
-    return this.apiService.postRequest<RequestModel>(request.model, request.data).pipe(take(1));
+  create(request: RequestModel) {
+    return this.apiService.postRequest<ResponseModel>(`${this.BASE_URL}/${request.model}`, request.data).pipe(take(1));
   }
 
   update(request: RequestModel) {
-    return this.apiService.putRequest<RequestModel>(request.model, request.data).pipe(take(1));
+    return this.apiService.putRequest<ResponseModel>(`${this.BASE_URL}/${request.model}`, request.data).pipe(take(1));
   }
 
-  remove(request: RequestModel) {
-    return this.apiService.deleteRequest<RequestModel>(`${request.model}/${request.data}`).pipe(take(1));
+  delete(request: RequestModel) {
+    return this.apiService.deleteRequest<ResponseModel>(`${this.BASE_URL}/${request.model}/${request.data}`).pipe(take(1));
   }
 
 }

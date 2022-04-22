@@ -1,5 +1,5 @@
 import { DomsAccrualBasis } from "../doms/DomsAccrualBasis";
-import { Field, Model, Relationship } from "../utils/Model";
+import { Field, Model, Relationship } from "../Model";
 import { SysCurrency } from "./SysCurrency";
 
 export class SysCurveUnderlyingLink implements Model {
@@ -10,6 +10,7 @@ export class SysCurveUnderlyingLink implements Model {
 
     constructor() {}
 
+    public readonly idField = 'LinkId';
     public readonly fields: Field[] = [
         {
             name: 'LinkId',

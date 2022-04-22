@@ -3,9 +3,9 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "ng serve --configuration development",
+    "start": "ng serve --configuration development --proxy-config proxy.config.js",
     "build": "ng build --prod",
-    "watch": "ng build --watch --configuration development",
+    "watch": "ng build --watch --configuration development --proxy-config proxy.config.js",
     "test": "ng test",
     "local-server": "npx json-server --watch localDB.json"
   },

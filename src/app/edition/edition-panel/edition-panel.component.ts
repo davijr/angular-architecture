@@ -1,15 +1,14 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDrawer } from '@angular/material/sidenav';
 import { ActivatedRoute } from '@angular/router';
-import { catchError, map, Observable, of, Subject, Subscription } from 'rxjs';
-import { DomsSystemType } from 'src/app/model/doms/DomsSystemType';
-import { EditionModelEnum } from 'src/app/model/enum/EditionModelEnum';
+import { catchError, map, Observable, of, SchedulerLike, Subject, subscribeOn, Subscription } from 'rxjs';
 import { Item } from 'src/app/model/Item';
-import { SysExternalSystem } from 'src/app/model/sys/SysExternalSystem';
-import { Model } from 'src/app/model/utils/Model';
+import { Model } from 'src/app/model/Model';
+import { ModelUtils } from 'src/app/model/utils/ModelUtils';
 import { RequestModel } from 'src/app/model/utils/RequestModel';
 import { ResponseModel } from 'src/app/model/utils/ResponseModel';
 import { AlertService } from 'src/app/shared/services/alert.service';
+import { ProgressService } from 'src/app/shared/services/progress.service';
 import { EditionService } from '../services/edition.service';
 
 @Component({
@@ -23,24 +22,29 @@ export class EditionPanelComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatDrawer;
 
   routeSubscription!: Subscription;
-  editionMode: ('list' | 'edit') = 'list';
+  editionMode: ('list' | 'create' | 'edit') = 'list';
 
   model!: Model;
-  modelEdit?: Model;
+  modelEdit: any;
 
-  items$: Observable<Model[]> = new Observable();
+  items$: Observable<Model[]> = new Observable<Model[]>();
   error$ = new Subject<boolean>();
 
   constructor(
     private editionService: EditionService,
+    private progressService: ProgressService,
     private alertService: AlertService,
     private route: ActivatedRoute) {
   }
   
   ngOnInit(): void {
     this.routeSubscription = this.route.params.subscribe((params: any) => {
-      this.selectModel(params['editionModel']);
-      this.onRefresh();
+      ModelUtils.getModelInstance(this, params['editionModel']);
+      if (!this.model) {
+        this.alertService.modalError("There is no valid entity selected.");
+      } else {
+        this.onRefresh();
+      }
     });
   }
 
@@ -48,88 +52,75 @@ export class EditionPanelComponent implements OnInit {
     this.routeSubscription.unsubscribe();
   }
 
-  selectModel(editionModelSelected: string) {
-    switch(editionModelSelected) {
-      case (EditionModelEnum.SysExternalSystem): this.model = new SysExternalSystem(); break;
-      case (EditionModelEnum.DomsSystemType): this.model = new DomsSystemType(); break;
-      default: console.error("ERROR! Model not found."); break;
-    }
-  }
-
   onRefresh() {
+    this.progressService.showLoading();
     const requestModel: RequestModel = {
-      model: this.model?.constructor.name,
+      model: this.model.constructor.name || '',
       data: this.model,
       searchOptions: {
         page: 1,
         limit: 10,
-        order: 'desc'
+        order: 'desc',
+        orderBy: 'systemType'
       }
     };
-    this.items$ = this.editionService.list(requestModel)
+    this.items$ = this.editionService.find(requestModel)
       .pipe(
         map((response: ResponseModel) => response.data),
         catchError(error => {
           console.error('error', error)
-          this.handleError()
+          this.alertService.toastError("Error on getting data.")
           return of()
         })
-    )
+      );
+    this.items$.subscribe({ complete: () => this.progressService.hideLoading() });
   }
 
   onCreate(): void {
-    this.editionMode = 'edit';
-    this.parseModel(this.model);
-    this.drawer.toggle();
+    this.editionMode = 'create';
+    this.modelEdit = ModelUtils.parseModel(this.model, {});
+    this.drawer.open();
   }
 
-  onEdit(item: Model): void {
+  onEdit(model: Model): void {
     this.editionMode = 'edit';
-    this.parseModel(item);
-    this.drawer.toggle();
+    this.modelEdit = ModelUtils.parseModel(this.model, model);
+    this.drawer.open();
+  }
+
+  onCancel(event: any) {
+    this.onExitEditMode();
+    this.drawer.close();
   }
 
   onExitEditMode() {
-    // this.selectModel();
     this.editionMode = 'list';
-    this.modelEdit = undefined;
+    this.modelEdit = Object.assign({});
   }
 
-  onSave() {
-    console.log('agooora vai !!!')
+  onSave(modelEdit: any) {
+    if ('create' === this.editionMode) {
+      this.progressService.showLoading();
+      this.editionService.create(
+        ModelUtils.parseToRequest(this.model.constructor.name, modelEdit)).subscribe(this.performAction('Create'));
+    } else if ('edit' === this.editionMode) {
+      this.progressService.showLoading();
+      this.editionService.update(
+        ModelUtils.parseToRequest(this.model.constructor.name, modelEdit)).subscribe(this.performAction('Update'));
+    }
   }
 
-  private parseModel(item: any) {
-    const newModel: any = Object.assign({}, this.model);
-    Object.keys(item).forEach((keyName: any) => {
-      newModel[keyName] = item[keyName];
+  onDelete(model: Model): void {
+    this.modelEdit = model;
+    this.alertService.prompt().subscribe({
+      next: () => this.delete()
     });
-    this.modelEdit = newModel;
   }
 
-  onDelete(item: Item): void {
-    this.alertService.modalInfo("Test message.")
-  }
-
-  onConfirmDelete() {}
-
-  onDeclineDelete() {}
-
-  handleError() {
-    this.alertService.modalError("Error on getting data.")
-    // this.alertService.toastError("Error on getting data.")
-  }
-
-  submit() {
-    // console.log(this.form);
-
-    // let valueSubmit = Object.assign({}, this.form.value);
-
-    // valueSubmit = Object.assign(valueSubmit, {
-    //   frameworks: valueSubmit.frameworks
-    //     .map((v, i) => v ? this.frameworks[i] : null)
-    //     .filter(v => v !== null)
-    // })
+  delete() {
+    this.progressService.showLoading();
+    this.editionService.delete(
+      ModelUtils.parseToRequest(this.model.constructor.name, this.modelEdit[this.model.idField])).subscribe(this.performAction('Delete'));
   }
 
   beautifyName(name?: string) {
@@ -138,6 +129,17 @@ export class EditionPanelComponent implements OnInit {
 
   getKeys(item: any, columnName: string) {
     return item[columnName];
+  }
+
+  performAction(actionName: string) {
+    return {
+      next: () => this.alertService.toastSuccess(`${actionName} with success!`),
+      error: () => this.alertService.toastError(`Error on trying to ${actionName.toUpperCase()}.`),
+      complete: () => {
+        this.onRefresh();
+        this.drawer.close();
+      }
+    }
   }
 
 }

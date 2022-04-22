@@ -2,7 +2,8 @@ import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { catchError, of } from 'rxjs';
-import { Field, Model, Relationship } from 'src/app/model/utils/Model';
+import { Field, Model, Relationship } from 'src/app/model/Model';
+import { ModelUtils } from 'src/app/model/utils/ModelUtils';
 import { RequestModel } from 'src/app/model/utils/RequestModel';
 import { ResponseModel } from 'src/app/model/utils/ResponseModel';
 import { AlertService } from '../services/alert.service';
@@ -39,21 +40,20 @@ export abstract class BaseFormComponent implements OnInit {
     this.setValues();
   }
 
-  abstract submit(): void;
+  abstract submit(model: any): void;
 
   onSubmit(): void {
-    console.log('form', this.form)
     if (this.form.valid) {
-      this.submit();
+      this.submit(this.form.value);
     } else {
-      console.error('invalid form');
+      this.alertService.toastError("There is validations errors. Please, verify the fields.");
       this.verifyFormValidations(this.form);
     }
   }
 
   buildFormGroup() {
     const formGroup: any = {};
-    this.model?.fields.forEach((field: Field) => {
+    this.model.fields.forEach((field: Field) => {
       const validators: any[] = [];
       if (field.required) {
         validators.push(Validators.required);
@@ -67,7 +67,7 @@ export abstract class BaseFormComponent implements OnInit {
   }
 
   getRelationships() {
-    this.model?.fields.forEach((field: Field) => {
+    this.model.fields.forEach((field: Field) => {
       if (field.type.includes('relationship')) {
         const relationship = Object.assign({}, field.relationship);
         const request = <RequestModel> {

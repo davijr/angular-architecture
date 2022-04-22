@@ -9,10 +9,12 @@ import { ApiService } from '../../core/services/api.service';
 })
 export class OptionsService {
 
+  private readonly BASE_URL = 'edition';
+
   constructor(private apiService: ApiService) {}
 
   list(request: RequestModel) {
-    return this.apiService.getRequest<ResponseModel>(request.model).pipe(take(1));
+    return this.apiService.getRequest<ResponseModel>(`${this.BASE_URL}/${request.model}`).pipe(take(1));
   }
 
 }

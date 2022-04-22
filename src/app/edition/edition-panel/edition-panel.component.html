@@ -7,17 +7,18 @@
           <div class="fw-bold fs-5">{{ beautifyName(model?.constructor?.name) }}</div>
         </div>
         <div class="col-2 actions text-end">
-          <button mat-icon-button color="primary" [routerLink]="['novo']"><mat-icon>add</mat-icon></button>
+          <button mat-icon-button color="primary" (click)="onCreate()"><mat-icon>add</mat-icon></button>
           <button mat-icon-button color="dark" (click)="onRefresh()"><mat-icon>refresh</mat-icon></button>
         </div>
       </div>
     </div>
   </div>
-  <div class="card-body table-responsive">
+  <div class="card-body table-responsive align-middle">
 
     <mat-drawer-container class="container" autosize>
       <mat-drawer #drawer class="sidenav" position="end" (closed)="onExitEditMode()">
-        <app-table-form [modelParam]="modelEdit" *ngIf="modelEdit !== undefined && ['edit'].includes(editionMode)" (save)="onSave()"></app-table-form>
+        <app-table-form [modelEdit]="modelEdit" (save)="onSave($event)" (cancel)="onCancel($event)"
+          *ngIf="modelEdit !== undefined && ['edit', 'create'].includes(editionMode)"></app-table-form>
       </mat-drawer>
       <div class="sidenav-content">
 
@@ -35,7 +36,7 @@
                 <button mat-icon-button color="primary" aria-label="Edit" class="mb-1 btn-sm" (click)="onEdit(item)">
                   <mat-icon>edit</mat-icon>
                 </button>
-                <button mat-icon-button color="primary" aria-label="Delete" class="mb-1 btn-sm">
+                <button mat-icon-button color="primary" aria-label="Delete" class="mb-1 btn-sm" (click)="onDelete(item)">
                   <mat-icon>delete</mat-icon>
                 </button>
               </td>
@@ -59,6 +60,9 @@
       </div>
     </mat-drawer-container>
 
+  </div>
+  <div class="card-footer">
+    
   </div>
 </div>
 

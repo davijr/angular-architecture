@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  API_URL: 'http://localhost:3000/',
-  debugForms: true
+  API_URL: 'http://localhost:4200/api/',
+  debugForms: false
 };
 
 /*

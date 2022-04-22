@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
-import { Model, Relationship } from 'src/app/model/utils/Model';
+import { Model, Relationship } from 'src/app/model/Model';
 import { environment } from 'src/environments/environment';
 import { BaseFormComponent } from '../base-form/base-form.component';
 import { AlertService } from '../services/alert.service';
@@ -14,8 +14,9 @@ import { ProgressService } from '../services/progress.service';
 })
 export class TableFormComponent extends BaseFormComponent implements OnInit {
   
-  @Input() modelParam!: Model;
-  @Output() save = new EventEmitter();
+  @Input() modelEdit!: Model;
+  @Output() cancel = new EventEmitter<any>();
+  @Output() save = new EventEmitter<any>();
   
   readonly debugForms = environment.debugForms;
   
@@ -28,17 +29,22 @@ export class TableFormComponent extends BaseFormComponent implements OnInit {
   }
   
   override ngOnInit(): void {
-    this.model = this.modelParam;
+    this.model = this.modelEdit;
     this.initForm();
   }
   
-  submit(): void {
-    this.save.emit(this.form.value);
+  submit(model: Model): void {
+    this.save.emit(model);
   }
-  
-  // onSubmit() {
-  //   console.log('form.value', this.form.value)
-  // }
+
+  onClear() {
+    this.reset();
+  }
+
+  onCancel() {
+    this.reset();
+    this.cancel.emit({});
+  }
 
   validationMessage(fieldName: string = ''): string | null {
     if (!this.form.get(fieldName)?.valid) {
