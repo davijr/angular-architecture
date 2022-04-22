@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { delay, take, tap } from 'rxjs';
+import { map, take } from 'rxjs';
 import { ApiService } from 'src/app/core/services/api.service';
-import { Item } from 'src/app/model/item';
+import { RequestModel } from 'src/app/model/utils/RequestModel';
+import { ResponseModel } from 'src/app/model/utils/ResponseModel';
 
 
 @Injectable({
@@ -9,19 +10,24 @@ import { Item } from 'src/app/model/item';
 })
 export class EditionService {
 
+  private readonly BASE_URL = 'edition';
+
   constructor(private apiService: ApiService) {}
 
-  list() {
-    return this.apiService.getRequest<Item[]>('items')
-      .pipe(
-        delay(2000),
-        take(1),
-        tap((item: any) => console.log(item))
-      );
+  find(request: RequestModel) {
+    return this.apiService.getRequest<ResponseModel>(`${this.BASE_URL}/${request.model}`).pipe(take(1));
   }
 
-  add(item: Item): Item {
-    return {id: 1, name: 'Item 1'};
+  create(request: RequestModel) {
+    return this.apiService.postRequest<ResponseModel>(`${this.BASE_URL}/${request.model}`, request.data).pipe(take(1));
+  }
+
+  update(request: RequestModel) {
+    return this.apiService.putRequest<ResponseModel>(`${this.BASE_URL}/${request.model}`, request.data).pipe(take(1));
+  }
+
+  delete(request: RequestModel) {
+    return this.apiService.deleteRequest<ResponseModel>(`${this.BASE_URL}/${request.model}/${request.data}`).pipe(take(1));
   }
 
 }

@@ -1,11 +1,31 @@
 
-<h1>Home</h1>
+<mat-sidenav-container class="sidenav-container" (backdropClick)="close('backdrop')">
+  <mat-sidenav mode="over" class="sidenav" #sidenav (keydown.escape)="close('escape')" disableClose>
+    <div class="text-end btn-close-container">
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="close('toggle button')"></button>
+    </div>
+    <div *ngFor="let module of getMenuOptions()">
+      <div class="title-container" *ngIf="module.active">
+        <p><b>{{ module.name }}</b></p>
+        <div *ngFor="let item of module.items">
+          <ul class="list-group" style="cursor: pointer;">
+            <li class="list-group-item" [routerLink]="[item.route, item.param]" (click)="sidenav.close()" *ngIf="item.active">{{ item.name }}</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </mat-sidenav>
 
-<nav>
-    <a routerLink="/login">Login</a><br>
-    <a routerLink="/edition">Edition Panel</a>
-</nav>
-
-<br><br>
-
-<router-outlet></router-outlet>
+  <mat-sidenav-content>
+    <mat-toolbar color="primary">
+      <button mat-icon-button class="example-icon" aria-label="Menu" (click)="sidenav.open()">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span>{{ title }}</span>
+    </mat-toolbar>
+    <mat-progress-bar mode="indeterminate" color="accent" *ngIf="isLoading()"></mat-progress-bar>
+    <div class="container" [ngClass]="{'loading-margin': !isLoading()}">
+      <router-outlet></router-outlet>
+    </div>
+  </mat-sidenav-content>
+</mat-sidenav-container>

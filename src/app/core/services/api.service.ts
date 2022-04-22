@@ -15,12 +15,16 @@ export class ApiService {
     return this.http.get<T>(`${this.API_URL}${url}`);
   }
 
-  // findOne() {}
+  postRequest<T>(url: string, data: any) {
+    return this.http.post<T>(`${this.API_URL}${url}`, data);
+  }
 
-  // create() {}
+  putRequest<T>(url: string, data: any) {
+    return this.http.put<T>(`${this.API_URL}${url}`, data);
+  }
 
-  // update() {}
-
-  // delete() {}
+  deleteRequest<T>(url: string) {
+    return this.http.delete<T>(`${this.API_URL}${url}`);
+  }
 
 }

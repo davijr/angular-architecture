@@ -1,0 +1,54 @@
+.card-header {
+  padding: 0;
+  margin: 0;
+
+  .container {
+    .title {
+      padding: 1rem;
+    }
+
+    .actions {
+      padding: 0.4rem;
+      padding-right: 1.4rem;
+    }
+  }
+}
+
+.card-body {
+  padding: 0;
+  min-height: 400px;
+
+  .sidenav {
+    width: 80%;
+    padding: 1rem;
+    padding-right: 1.5rem;
+  }
+
+  mat-drawer-container {
+    padding: 0;
+    min-height: 400px;
+
+    mat-drawer {
+      background-color: rgb(247, 247, 247);
+    }
+  }
+
+  table {
+    margin: 0;
+
+    tr th {
+      padding-top: 0.6rem;
+      padding-bottom: 0.6rem;
+    }
+
+    th,
+    td {
+      padding-left: 0.6rem;
+      padding-right: 0.6rem;
+    }
+
+    td.actions {
+      padding: 0;
+    }
+  }
+}
