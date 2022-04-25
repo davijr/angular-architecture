@@ -70,7 +70,7 @@ export class EditionPanelComponent implements OnInit {
         catchError(error => {
           console.error('error', error)
           this.alertService.toastError("Error on getting data.")
-          return of()
+          return of([])
         })
       );
     this.items$.subscribe({ complete: () => this.progressService.hideLoading() });

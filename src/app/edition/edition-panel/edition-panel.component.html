@@ -22,41 +22,40 @@
       </mat-drawer>
       <div class="sidenav-content">
 
-        <table class="table table-hover table-sm" *ngIf="items$ | async as items; else loadingError, loading">
-          <thead>
-            <tr>
-              <th class="align-middle" *ngFor="let column of model.fields">{{ beautifyName(column.name) }}</th>
-              <th class="align-middle text-center">ACTIONS</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let item of items">
-              <td class="align-middle" *ngFor="let column of model.fields">{{ getKeys(item, column.name) }}</td>
-              <td class="align-middle text-center actions">
-                <button mat-icon-button color="primary" aria-label="Edit" class="mb-1 btn-sm" (click)="onEdit(item)">
-                  <mat-icon>edit</mat-icon>
-                </button>
-                <button mat-icon-button color="primary" aria-label="Delete" class="mb-1 btn-sm" (click)="onDelete(item)">
-                  <mat-icon>delete</mat-icon>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
+        <div *ngIf="items$ | async as items; else loading">
+          <table class="table table-hover table-sm" *ngIf="items.length > 0; else isEmpty">
+            <thead>
+              <tr>
+                <th class="align-middle" *ngFor="let column of model.fields">{{ beautifyName(column.name) }}</th>
+                <th class="align-middle text-center">ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of items">
+                <td class="align-middle" *ngFor="let column of model.fields">{{ getKeys(item, column.name) }}</td>
+                <td class="align-middle text-center actions">
+                  <button mat-icon-button color="primary" aria-label="Edit" class="mb-1 btn-sm" (click)="onEdit(item)">
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button color="primary" aria-label="Delete" class="mb-1 btn-sm" (click)="onDelete(item)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <ng-template #isEmpty>
+            <div class="is-empty">
+              <p>Nothing to be shown.</p>
+            </div>
+          </ng-template>
+        </div>
 
         <ng-template #loading>
-          <span>Loading items...</span>
-        </ng-template>
-
-        <ng-template #loadingError>
-          <div *ngIf="error$ | async; else loading">
-            Erro ao carregar items. Tente novamente mais tarde.
+          <div class="loading-spinner-container">
+            <mat-spinner></mat-spinner>
           </div>
-          <ng-template #loading>
-            <span>Loading items...</span>
-          </ng-template>
         </ng-template>
-
       </div>
     </mat-drawer-container>
 

@@ -4,8 +4,8 @@
 
 export const environment = {
   production: false,
-  API_URL: 'http://bzdf-frontend-dev.gcp.cloud.us.hsbc:8080/api/',
-  debugForms: false
+  API_URL: 'http://localhost:4200/api/',
+  debugForms: true
 };
 
 /*
