@@ -21,7 +21,7 @@
       <button mat-icon-button class="example-icon" aria-label="Menu" (click)="sidenav.open()">
         <mat-icon>menu</mat-icon>
       </button>
-      <span>{{ title }}</span>
+      <span><b>{{ title }}</b></span>
     </mat-toolbar>
     <mat-progress-bar mode="indeterminate" color="accent" *ngIf="isLoading()"></mat-progress-bar>
     <div class="container" [ngClass]="{'loading-margin': !isLoading()}">
