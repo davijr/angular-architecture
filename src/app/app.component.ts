@@ -70,7 +70,7 @@ export class AppComponent {
       },
       {
         name: 'DOMS',
-        active: true,
+        active: false,
         items: [
           { name: 'Doms System Type', route: 'edition', param: 'DomsSystemType', active: true },
           { name: '', route: '', param: '', active: false },
