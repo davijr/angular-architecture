@@ -7,8 +7,19 @@
           <div class="fw-bold fs-5">{{ beautifyName(model?.constructor?.name) }}</div>
         </div>
         <div class="col-2 actions text-end">
-          <button mat-icon-button color="primary" (click)="onCreate()"><mat-icon>add</mat-icon></button>
-          <button mat-icon-button color="dark" (click)="onRefresh()"><mat-icon>refresh</mat-icon></button>
+          <button mat-icon-button color="primary" tooltip="Create" aria-label="Create" (click)="onCreate()"><mat-icon>add</mat-icon></button>
+          <!-- <button mat-icon-button color="primary" tooltip="Clear" aria-label="Clear" (click)="clearFilter()"><mat-icon>filter_alt_off</mat-icon></button> -->
+          <button mat-icon-button color="primary" tooltip="Refresh" aria-label="Refresh" (click)="onRefresh()"><mat-icon>refresh</mat-icon></button>
+        </div>
+      </div>
+      <div class="row filters" [formGroup]="formFilter">
+        <div class="col-2 form-group" *ngFor="let field of model?.fields">
+          <label for="{{ field.name }}">{{ field.label }}</label>
+          <input type="{{ field.type }}" id="{{ field.name }}" class="form-control"
+            formControlName="{{ field.name }}" autocomplete="off" maxlength="{{ field.length }}">
+        </div>
+        <div class="col-1 form-group clear-button">
+          <button mat-icon-button color="primary" tooltip="Clear" aria-label="Clear" (click)="clearFilter()"><mat-icon>delete</mat-icon></button>
         </div>
       </div>
     </div>
@@ -17,8 +28,8 @@
 
     <mat-drawer-container class="container" autosize>
       <mat-drawer #drawer class="sidenav" position="end" (closed)="onExitEditMode()">
-        <app-table-form [modelEdit]="modelEdit" (save)="onSave($event)" (cancel)="onCancel($event)"
-          *ngIf="modelEdit !== undefined && ['edit', 'create'].includes(editionMode)"></app-table-form>
+        <app-table-form [modelEdit]="modelEdit" (save)="onSave($event)" (cancel)="onCancel($event)" [editionMode]="editionMode"
+          *ngIf="modelEdit !== undefined && ['edit', 'create', 'copy'].includes(editionMode)"></app-table-form>
       </mat-drawer>
       <div class="sidenav-content">
 
@@ -36,6 +47,9 @@
                 <td class="align-middle text-center actions">
                   <button mat-icon-button color="primary" aria-label="Edit" class="mb-1 btn-sm" (click)="onEdit(item)">
                     <mat-icon>edit</mat-icon>
+                  </button>
+                  <button mat-icon-button color="primary" aria-label="Copy" class="mb-1 btn-sm" (click)="onCopy(item)">
+                    <mat-icon>content_copy</mat-icon>
                   </button>
                   <button mat-icon-button color="primary" aria-label="Delete" class="mb-1 btn-sm" (click)="onDelete(item)">
                     <mat-icon>delete</mat-icon>
@@ -65,5 +79,3 @@
   </div>
 </div>
 
-<!-- <h2>{{ beautifyName(model?.constructor?.name) }}</h2>
-<app-table-form [modelParam]="model" *ngIf="model && ['edit'].includes(editionMode)"></app-table-form> -->

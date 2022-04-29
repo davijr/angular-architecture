@@ -14,6 +14,7 @@ import { ProgressService } from '../services/progress.service';
 })
 export class TableFormComponent extends BaseFormComponent implements OnInit {
   
+  @Input() editionMode: ('list' | 'create' | 'edit' | 'copy') = 'edit';
   @Input() modelEdit!: Model;
   @Output() cancel = new EventEmitter<any>();
   @Output() save = new EventEmitter<any>();
@@ -31,6 +32,9 @@ export class TableFormComponent extends BaseFormComponent implements OnInit {
   override ngOnInit(): void {
     this.model = this.modelEdit;
     this.initForm();
+    if (this.editionMode === 'edit') {
+      this.form.get(this.modelEdit.idField)?.disable();
+    }
   }
   
   submit(model: Model): void {

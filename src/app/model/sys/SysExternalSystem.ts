@@ -25,6 +25,7 @@ export class SysExternalSystem implements Model {
         }, {
             name: 'systemType',
             label: 'System Type',
+            length: 2,
             type: 'relationship',
             relationship: <Relationship> {
                 name: 'DomsSystemType',

@@ -1,9 +1,10 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDrawer } from '@angular/material/sidenav';
 import { ActivatedRoute } from '@angular/router';
-import { catchError, map, Observable, of, SchedulerLike, Subject, subscribeOn, Subscription } from 'rxjs';
-import { Item } from 'src/app/model/Item';
-import { Model } from 'src/app/model/Model';
+import { catchError, debounceTime, distinctUntilChanged, filter, first, map, Observable, of, Subject, Subscription, switchMap, tap } from 'rxjs';
+import { Field, Model } from 'src/app/model/Model';
+import { SearchOptions } from 'src/app/model/SearchOptions';
 import { ModelUtils } from 'src/app/model/utils/ModelUtils';
 import { RequestModel } from 'src/app/model/utils/RequestModel';
 import { ResponseModel } from 'src/app/model/utils/ResponseModel';
@@ -22,18 +23,34 @@ export class EditionPanelComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatDrawer;
 
   routeSubscription!: Subscription;
-  editionMode: ('list' | 'create' | 'edit') = 'list';
+  editionMode: ('list' | 'create' | 'edit' | 'copy') = 'list';
 
   model!: Model;
   modelEdit: any;
 
   items$: Observable<Model[]> = new Observable<Model[]>();
+  itemsWithoutFilters$: Observable<Model[]> = new Observable<Model[]>();
   error$ = new Subject<boolean>();
+  
+  searchOptions: SearchOptions = {
+    page: 1,
+    limit: 10,
+    order: 'desc',
+    orderBy: 'systemType'
+  }
+
+  filterObject: any = {};
+
+  /**
+   * Elements for Filter Component:
+   */
+  formFilter!: FormGroup;
 
   constructor(
     private editionService: EditionService,
     private progressService: ProgressService,
     private alertService: AlertService,
+    private formBuilder: FormBuilder,
     private route: ActivatedRoute) {
   }
   
@@ -44,6 +61,7 @@ export class EditionPanelComponent implements OnInit {
         this.alertService.modalError("There is no valid entity selected.");
       } else {
         this.onRefresh();
+        this.buildFilterFields();
       }
     });
   }
@@ -57,12 +75,7 @@ export class EditionPanelComponent implements OnInit {
     const requestModel: RequestModel = {
       model: this.model.constructor.name || '',
       data: this.model,
-      searchOptions: {
-        page: 1,
-        limit: 10,
-        order: 'desc',
-        orderBy: 'systemType'
-      }
+      searchOptions: this.searchOptions
     };
     this.items$ = this.editionService.find(requestModel)
       .pipe(
@@ -74,6 +87,7 @@ export class EditionPanelComponent implements OnInit {
         })
       );
     this.items$.subscribe({ complete: () => this.progressService.hideLoading() });
+    this.itemsWithoutFilters$ = this.items$;
   }
 
   onCreate(): void {
@@ -85,6 +99,14 @@ export class EditionPanelComponent implements OnInit {
   onEdit(model: Model): void {
     this.editionMode = 'edit';
     this.modelEdit = ModelUtils.parseModel(this.model, model);
+    this.drawer.open();
+  }
+
+  onCopy(model: Model): void {
+    this.editionMode = 'copy';
+    const modelCopy: any = Object.assign({}, model);
+    delete modelCopy[this.model.idField];
+    this.modelEdit = ModelUtils.parseModel(this.model, modelCopy);
     this.drawer.open();
   }
 
@@ -140,6 +162,67 @@ export class EditionPanelComponent implements OnInit {
         this.drawer.close();
       }
     }
+  }
+
+  /**
+   * Component: Dynamic Filters
+   */
+
+  buildFilterFields() {
+    const formGroup: any = {};
+    this.model.fields.forEach((field: Field) => {
+      const validators: any[] = [];
+      if (field.required) {
+        validators.push(Validators.required);
+      }
+      if (field.length) {
+        validators.push(Validators.maxLength(field.length));
+      }
+      formGroup[field.name] = [null, validators];
+    });
+    this.formFilter = this.formBuilder.group(formGroup);
+    this.initFilters()
+  }
+
+  initFilters() {
+    Object.keys(this.formFilter.controls).forEach((element: any) => {
+      const formElement: any = this.formFilter.get(element) || {};
+      formElement.valueChanges
+        .pipe(
+          map((value: string) => value?.trim()),
+          // filter((value: string) => value.length > 1),
+          debounceTime(200),
+          distinctUntilChanged()
+        ).subscribe((filter: any) => this.filterItems(element, filter));
+    });
+  }
+
+  filterItems(filterElement: any, filterValue: any) {
+    if (filterValue) {
+      this.filterObject[filterElement] = filterValue;
+    } else {
+      delete  this.filterObject[filterElement];
+    }
+    this.items$ = this.itemsWithoutFilters$;
+    this.items$ = this.items$.pipe(
+      map((mapObject: any) => mapObject.filter((item: any) => {
+        // percorrer todos os campos de filtro preenchidos e filtrar os itens utilizando regra AND
+        let matches = 0;
+        Object.keys(this.filterObject).forEach((filterItem: string) => {
+          if (item[filterItem]?.toLowerCase().startsWith(this.filterObject[filterItem]?.toLowerCase())) {
+            matches++;
+          }
+        })
+        return matches === Object.keys(this.filterObject).length;
+      }))
+    );
+  }
+
+  clearFilter() {
+    this.items$ = this.itemsWithoutFilters$;
+    Object.keys(this.formFilter.controls).forEach((element: any) => {
+      this.formFilter.get(element)?.setValue(null);
+    });
   }
 
 }
