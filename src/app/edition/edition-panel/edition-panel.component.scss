@@ -12,6 +12,18 @@
       padding-right: 1.4rem;
     }
   }
+
+  .filters {
+    margin-bottom: 1rem;
+
+    .clear-button {
+      padding: 0;
+
+      button {
+        margin: 16px 0 -20px 0 !important;
+      }
+    }
+  }
 }
 
 .card-body {

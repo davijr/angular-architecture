@@ -7,8 +7,19 @@
           <div class="fw-bold fs-5">{{ beautifyName(model?.constructor?.name) }}</div>
         </div>
         <div class="col-2 actions text-end">
-          <button mat-icon-button color="primary" (click)="onCreate()"><mat-icon>add</mat-icon></button>
-          <button mat-icon-button color="dark" (click)="onRefresh()"><mat-icon>refresh</mat-icon></button>
+          <button mat-icon-button color="primary" tooltip="Create" aria-label="Create" (click)="onCreate()"><mat-icon>add</mat-icon></button>
+          <!-- <button mat-icon-button color="primary" tooltip="Clear" aria-label="Clear" (click)="clearFilter()"><mat-icon>filter_alt_off</mat-icon></button> -->
+          <button mat-icon-button color="primary" tooltip="Refresh" aria-label="Refresh" (click)="onRefresh()"><mat-icon>refresh</mat-icon></button>
+        </div>
+      </div>
+      <div class="row filters" [formGroup]="formFilter">
+        <div class="col-2 form-group" *ngFor="let field of model?.fields">
+          <label for="{{ field.name }}">{{ field.label }}</label>
+          <input type="{{ field.type }}" id="{{ field.name }}" class="form-control"
+              placeholder="{{ field.label }}" formControlName="{{ field.name }}" autocomplete="off" maxlength="{{ field.length }}">
+        </div>
+        <div class="col-1 form-group clear-button">
+          <button mat-icon-button color="primary" tooltip="Clear" aria-label="Clear" (click)="clearFilter()"><mat-icon>delete</mat-icon></button>
         </div>
       </div>
     </div>
@@ -65,5 +76,3 @@
   </div>
 </div>
 
-<!-- <h2>{{ beautifyName(model?.constructor?.name) }}</h2>
-<app-table-form [modelParam]="model" *ngIf="model && ['edit'].includes(editionMode)"></app-table-form> -->
