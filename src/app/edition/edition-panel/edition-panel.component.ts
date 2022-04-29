@@ -3,12 +3,13 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDrawer } from '@angular/material/sidenav';
 import { ActivatedRoute } from '@angular/router';
 import { catchError, debounceTime, distinctUntilChanged, filter, first, map, Observable, of, Subject, Subscription, switchMap, tap } from 'rxjs';
-import { Field, Model } from 'src/app/model/Model';
+import { Field, Model, Relationship } from 'src/app/model/Model';
 import { SearchOptions } from 'src/app/model/SearchOptions';
 import { ModelUtils } from 'src/app/model/utils/ModelUtils';
 import { RequestModel } from 'src/app/model/utils/RequestModel';
 import { ResponseModel } from 'src/app/model/utils/ResponseModel';
 import { AlertService } from 'src/app/shared/services/alert.service';
+import { OptionsService } from 'src/app/shared/services/options.service';
 import { ProgressService } from 'src/app/shared/services/progress.service';
 import { EditionService } from '../services/edition.service';
 
@@ -38,16 +39,17 @@ export class EditionPanelComponent implements OnInit {
     order: 'desc',
     orderBy: 'systemType'
   }
-
-  filterObject: any = {};
-
+  
   /**
    * Elements for Filter Component:
    */
+  filterObject: any = {};
   formFilter!: FormGroup;
+  relationships: Relationship[] = [];
 
   constructor(
     private editionService: EditionService,
+    private optionsService: OptionsService,
     private progressService: ProgressService,
     private alertService: AlertService,
     private formBuilder: FormBuilder,
@@ -60,8 +62,8 @@ export class EditionPanelComponent implements OnInit {
       if (!this.model) {
         this.alertService.modalError("There is no valid entity selected.");
       } else {
-        this.onRefresh();
         this.buildFilterFields();
+        this.onRefresh();
       }
     });
   }
@@ -72,6 +74,7 @@ export class EditionPanelComponent implements OnInit {
 
   onRefresh() {
     this.progressService.showLoading();
+    this.clearFilter();
     const requestModel: RequestModel = {
       model: this.model.constructor.name || '',
       data: this.model,
@@ -182,6 +185,7 @@ export class EditionPanelComponent implements OnInit {
     });
     this.formFilter = this.formBuilder.group(formGroup);
     this.initFilters()
+    this.getRelationships()
   }
 
   initFilters() {
@@ -220,9 +224,53 @@ export class EditionPanelComponent implements OnInit {
 
   clearFilter() {
     this.items$ = this.itemsWithoutFilters$;
-    Object.keys(this.formFilter.controls).forEach((element: any) => {
-      this.formFilter.get(element)?.setValue(null);
+    Object.keys(this.formFilter!.controls).forEach((element: any) => {
+      this.formFilter!.get(element)?.setValue(null);
     });
+  }
+
+  getRelationships() {
+    this.model.fields.forEach((field: Field) => {
+      if (field.type.includes('relationship')) {
+        const relationship = Object.assign({}, field.relationship);
+        const request = <RequestModel> {
+          model: relationship.name
+        };
+        this.progressService.showLoading();
+        this.optionsService.list(request).pipe(
+          catchError(error => {
+            console.error('error', error)
+            // this.alertService.modalSuccess({} as BsModalRef, error.message);
+            this.alertService.toastError(error.message);
+            this.progressService.hideLoading();
+            return of()
+          })
+        ).subscribe((response: ResponseModel) => {
+          relationship.data = response.data;
+          this.relationships.push(relationship);
+          this.progressService.hideLoading();
+        });
+      }
+    });
+  }
+  
+  getOptions(relationshipName: string) {
+    const filtered: Relationship[] = this.relationships?.filter((i) => i.name === relationshipName) ?? [];
+    return filtered[0]?.data ?? [];
+  }
+
+  getShowFields(relationshipName: string, data: any): string {
+    const filtered: Relationship[] = this.relationships?.filter((i) => i.name === relationshipName) ?? [];
+    const showFields = filtered[0]?.showFields ?? [];
+    let show = '';
+    showFields.forEach((field, index) => {
+      if (index > 0) {
+        show += ` - ${data[field]}`;
+      } else {
+        show += `${data[field]}`;
+      }
+    });
+    return show;
   }
 
 }

@@ -14,9 +14,21 @@
       </div>
       <div class="row filters" [formGroup]="formFilter">
         <div class="col-2 form-group" *ngFor="let field of model?.fields">
-          <label for="{{ field.name }}">{{ field.label }}</label>
-          <input type="{{ field.type }}" id="{{ field.name }}" class="form-control"
-            formControlName="{{ field.name }}" autocomplete="off" maxlength="{{ field.length }}">
+          <div *ngIf="['text', 'number', 'email'].includes(field.type)">
+            <label for="{{ field.name }}">{{ field.label }}</label>
+            <input type="{{ field.type }}" id="{{ field.name }}" class="form-control"
+              formControlName="{{ field.name }}" autocomplete="off" maxlength="{{ field.length }}">
+          </div>
+          <div *ngIf="['relationship'].includes(field.type)">
+              <label for="{{ field.name }}">{{ field.label }}</label>
+              <select name="{{ field.name }}" id="{{ field.name }}" class="form-select"
+                  formControlName="{{ field.name }}">
+                  <option [value]="null">Select</option>
+                  <option *ngFor="let item of getOptions(field.relationship?.name ?? '')" [value]="item[field.relationship?.idAttribute ?? '']">
+                      {{ getShowFields(field.relationship?.name ?? '', item) }}
+                  </option>
+              </select>
+          </div>
         </div>
         <div class="col-1 form-group clear-button">
           <button mat-icon-button color="primary" tooltip="Clear" aria-label="Clear" (click)="clearFilter()"><mat-icon>delete</mat-icon></button>
