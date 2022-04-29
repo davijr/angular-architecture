@@ -1,9 +1,7 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
-import { BsModalRef } from 'ngx-bootstrap/modal';
 import { catchError, of } from 'rxjs';
 import { Field, Model, Relationship } from 'src/app/model/Model';
-import { ModelUtils } from 'src/app/model/utils/ModelUtils';
 import { RequestModel } from 'src/app/model/utils/RequestModel';
 import { ResponseModel } from 'src/app/model/utils/ResponseModel';
 import { AlertService } from '../services/alert.service';
