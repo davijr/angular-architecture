@@ -17,7 +17,7 @@
                 <div *ngIf="['text', 'number', 'email'].includes(field.type)">
                     <label for="{{ field.name }}">{{ field.label }}<span class="required">{{ isRequired(field.name) ? ' *' : '' }}</span></label>
                     <input type="{{ field.type }}" id="{{ field.name }}" class="form-control" [ngClass]="applyCssError(field.name)"
-                        placeholder="{{ field.label }}" formControlName="{{ field.name }}" autocomplete="off" maxlength="{{ field.length }}">
+                        formControlName="{{ field.name }}" autocomplete="off" maxlength="{{ field.length }}">
                 </div>
                 <div *ngIf="['relationship'].includes(field.type)">
                     <label for="{{ field.name }}">{{ field.label }}<span class="required">{{ isRequired(field.name) ? ' *' : '' }}</span></label>

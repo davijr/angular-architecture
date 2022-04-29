@@ -23,7 +23,7 @@ export class EditionPanelComponent implements OnInit {
   @ViewChild('drawer') drawer!: MatDrawer;
 
   routeSubscription!: Subscription;
-  editionMode: ('list' | 'create' | 'edit') = 'list';
+  editionMode: ('list' | 'create' | 'edit' | 'copy') = 'list';
 
   model!: Model;
   modelEdit: any;
@@ -99,6 +99,14 @@ export class EditionPanelComponent implements OnInit {
   onEdit(model: Model): void {
     this.editionMode = 'edit';
     this.modelEdit = ModelUtils.parseModel(this.model, model);
+    this.drawer.open();
+  }
+
+  onCopy(model: Model): void {
+    this.editionMode = 'copy';
+    const modelCopy: any = Object.assign({}, model);
+    delete modelCopy[this.model.idField];
+    this.modelEdit = ModelUtils.parseModel(this.model, modelCopy);
     this.drawer.open();
   }
 
@@ -200,7 +208,6 @@ export class EditionPanelComponent implements OnInit {
       map((mapObject: any) => mapObject.filter((item: any) => {
         // percorrer todos os campos de filtro preenchidos e filtrar os itens utilizando regra AND
         let matches = 0;
-        console.log('this.filterObject', this.filterObject)
         Object.keys(this.filterObject).forEach((filterItem: string) => {
           if (item[filterItem]?.toLowerCase().startsWith(this.filterObject[filterItem]?.toLowerCase())) {
             matches++;
