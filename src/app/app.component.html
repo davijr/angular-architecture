@@ -9,7 +9,7 @@
         <p><b>{{ module.name }}</b></p>
         <div *ngFor="let item of module.items">
           <ul class="list-group" style="cursor: pointer;">
-            <li class="list-group-item" [routerLink]="[item.route, item.param]" (click)="sidenav.close()" *ngIf="item.active">{{ item.name }}</li>
+            <li class="list-group-item" [routerLink]="[item.route, item.param]" (click)="sidenav.close()" *ngIf="item.active">&nbsp;&nbsp;{{ item.name }}</li>
           </ul>
         </div>
       </div>

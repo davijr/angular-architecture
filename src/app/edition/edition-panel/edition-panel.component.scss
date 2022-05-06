@@ -8,6 +8,7 @@
     }
 
     .actions {
+      min-width: 160px;
       padding: 0.4rem;
       padding-right: 1.4rem;
     }
@@ -22,6 +23,13 @@
       button {
         margin: 16px 0 -20px 0 !important;
       }
+    }
+
+    label {
+      max-width: 20ch;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 }
@@ -51,6 +59,10 @@
     tr th {
       padding-top: 0.6rem;
       padding-bottom: 0.6rem;
+
+      &.actions {
+        min-width: 130px;
+      }
     }
 
     th,

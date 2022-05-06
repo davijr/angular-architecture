@@ -21,6 +21,7 @@ import { CoreModule } from './core/core.module';
 import { ApiService } from './core/services/api.service';
 import { EditionModule } from './edition/edition.module';
 import { SharedModule } from './shared/shared.module';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @NgModule({
   declarations: [
@@ -50,7 +51,8 @@ import { SharedModule } from './shared/shared.module';
     MatSliderModule,
     AccordionModule, // TODO
     BsDropdownModule.forRoot(),
-    ModalModule.forRoot()
+    ModalModule.forRoot(),
+    BsDatepickerModule.forRoot()
   ],
   providers: [ApiService],
   bootstrap: [AppComponent]

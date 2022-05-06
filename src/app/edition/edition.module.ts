@@ -8,6 +8,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SharedModule } from '../shared/shared.module';
 import { EditionPanelComponent } from './edition-panel/edition-panel.component';
 import { EditionRoutingModule } from './edition.routing';
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @NgModule({
   declarations: [
@@ -21,7 +23,9 @@ import { EditionRoutingModule } from './edition.routing';
     MatSidenavModule,
     MatButtonModule,
     MatIconModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    TooltipModule.forRoot(),
+    BsDatepickerModule
   ]
 })
 export class EditionModule { }

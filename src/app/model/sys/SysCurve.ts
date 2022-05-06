@@ -29,8 +29,8 @@ export class SysCurve implements Model {
             label: 'Accrual Basis',
             type: 'relationship',
             relationship: <Relationship> {
-                name: 'domsAccrualBasis',
-                showFields: ['domain', 'domainDesc'],
+                name: 'DomsAccrualBasis',
+                showFields: ['domain'],
                 idAttribute: 'domain',
                 data: []
             }
@@ -39,7 +39,7 @@ export class SysCurve implements Model {
             label: 'Currency Code',
             type: 'relationship',
             relationship: <Relationship> {
-                name: 'sysCurrency',
+                name: 'SysCurrency',
                 showFields: ['currencyCode', 'currencyName'],
                 idAttribute: 'currencyCode',
                 data: []

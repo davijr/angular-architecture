@@ -11,6 +11,7 @@ import { TableFormComponent } from './table-form/table-form.component';
 
 import { OptionsService } from './services/options.service'
 import { PromptModalComponent } from './prompt-modal/prompt-modal.component';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { PromptModalComponent } from './prompt-modal/prompt-modal.component';
     ReactiveFormsModule,
     MatButtonModule,
     TooltipModule,
-    AlertModule.forRoot()
+    AlertModule.forRoot(),
+    BsDatepickerModule
   ],
   exports: [
     AlertModalComponent,

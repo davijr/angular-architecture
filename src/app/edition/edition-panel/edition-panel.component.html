@@ -9,18 +9,19 @@
         <div class="col-2 actions text-end">
           <button mat-icon-button color="primary" tooltip="Create" aria-label="Create" (click)="onCreate()"><mat-icon>add</mat-icon></button>
           <!-- <button mat-icon-button color="primary" tooltip="Clear" aria-label="Clear" (click)="clearFilter()"><mat-icon>filter_alt_off</mat-icon></button> -->
+          <button mat-icon-button color="primary" tooltip="Clear Filters" aria-label="Clear Filters" (click)="clearFilter()"><mat-icon>clear</mat-icon></button>
           <button mat-icon-button color="primary" tooltip="Refresh" aria-label="Refresh" (click)="onRefresh()"><mat-icon>refresh</mat-icon></button>
         </div>
       </div>
       <div class="row filters" [formGroup]="formFilter">
         <div class="col-2 form-group" *ngFor="let field of model?.fields">
           <div *ngIf="['text', 'number', 'email'].includes(field.type)">
-            <label for="{{ field.name }}">{{ field.label }}</label>
+            <label for="{{ field.name }}" tooltip="{{ field.label.length >= 20 ? field.label : '' }}">{{ field.label }}</label>
             <input type="{{ field.type }}" id="{{ field.name }}" class="form-control"
               formControlName="{{ field.name }}" autocomplete="off" maxlength="{{ field.length }}">
           </div>
           <div *ngIf="['relationship'].includes(field.type)">
-              <label for="{{ field.name }}">{{ field.label }}</label>
+              <label for="{{ field.name }}" tooltip="{{ field.label.length >= 20 ? field.label : '' }}">{{ field.label }}</label>
               <select name="{{ field.name }}" id="{{ field.name }}" class="form-select"
                   formControlName="{{ field.name }}">
                   <option [value]="null">Select</option>
@@ -29,10 +30,15 @@
                   </option>
               </select>
           </div>
+          <div *ngIf="['date'].includes(field.type)">
+              <label for="{{ field.name }}" tooltip="{{ field.label.length >= 20 ? field.label : '' }}">{{ field.label }}</label>
+              <input type="text" class="form-control" bsDatepicker [bsConfig]="{ dateInputFormat: 'YYYY-MM-DD', containerClass: 'theme-default' }"
+                id="{{ field.name }}" formControlName="{{ field.name }}">
+          </div>
         </div>
-        <div class="col-1 form-group clear-button">
+        <!-- div class="col-1 form-group clear-button">
           <button mat-icon-button color="primary" tooltip="Clear" aria-label="Clear" (click)="clearFilter()"><mat-icon>delete</mat-icon></button>
-        </div>
+        </div -->
       </div>
     </div>
   </div>
@@ -50,20 +56,20 @@
             <thead>
               <tr>
                 <th class="align-middle" *ngFor="let column of model.fields">{{ beautifyName(column.name) }}</th>
-                <th class="align-middle text-center">ACTIONS</th>
+                <th class="align-middle text-center actions">ACTIONS</th>
               </tr>
             </thead>
             <tbody>
               <tr *ngFor="let item of items">
                 <td class="align-middle" *ngFor="let column of model.fields">{{ getKeys(item, column.name) }}</td>
                 <td class="align-middle text-center actions">
-                  <button mat-icon-button color="primary" aria-label="Edit" class="mb-1 btn-sm" (click)="onEdit(item)">
+                  <button mat-icon-button color="primary" aria-label="Edit" tooltip="Edit" class="mb-1 btn-sm" (click)="onEdit(item)">
                     <mat-icon>edit</mat-icon>
                   </button>
-                  <button mat-icon-button color="primary" aria-label="Copy" class="mb-1 btn-sm" (click)="onCopy(item)">
+                  <button mat-icon-button color="primary" aria-label="Copy" tooltip="Copy" class="mb-1 btn-sm" (click)="onCopy(item)">
                     <mat-icon>content_copy</mat-icon>
                   </button>
-                  <button mat-icon-button color="primary" aria-label="Delete" class="mb-1 btn-sm" (click)="onDelete(item)">
+                  <button mat-icon-button color="primary" aria-label="Delete" tooltip="Delete" class="mb-1 btn-sm" (click)="onDelete(item)">
                     <mat-icon>delete</mat-icon>
                   </button>
                 </td>

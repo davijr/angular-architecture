@@ -42,7 +42,7 @@ export abstract class BaseFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.form.valid) {
-      this.submit(this.form.value);
+      this.submit(this.form.getRawValue());
     } else {
       this.alertService.toastError("There is validations errors. Please, verify the fields.");
       this.verifyFormValidations(this.form);
