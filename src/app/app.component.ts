@@ -32,7 +32,12 @@ export class AppComponent {
         name: 'SYS',
         active: true,
         items: [
-          { name: 'Sys External System', route: 'edition', param: 'SysExternalSystem', active: true },
+          { name: 'External System', route: 'edition', param: 'SysExternalSystem', active: true },
+          { name: 'External Currency', route: 'edition', param: 'SysCurrency', active: true },
+          { name: 'External Curve', route: 'edition', param: 'SysCurve', active: true },
+          { name: 'External Curve Underlying Link', route: 'edition', param: 'SysCurveUnderlyingLink', active: true },
+          { name: 'External Underlying', route: 'edition', param: 'SysUnderlying', active: true },
+          { name: 'External Underlying Type', route: 'edition', param: 'SysUnderlyingType', active: true },
           { name: '', route: '', param: '', active: false },
         ]
       },

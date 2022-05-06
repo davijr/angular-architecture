@@ -32,7 +32,7 @@ export class SysCurrency implements Model {
             required: true,
             type: 'relationship',
             relationship: <Relationship> {
-                name: 'domsCcyConvType',
+                name: 'DomsCcyConvType',
                 showFields: ['domain', 'domainDesc'],
                 idAttribute: 'domain',
                 data: []

@@ -35,7 +35,7 @@ export class SysUnderlying implements Model {
             required: true,
             type: 'relationship',
             relationship: <Relationship> {
-                name: 'sysCurrency',
+                name: 'SysCurrency',
                 showFields: ['currencyCode', 'currencyName'],
                 idAttribute: 'currencyCode',
                 data: []
@@ -46,8 +46,8 @@ export class SysUnderlying implements Model {
             required: true,
             type: 'relationship',
             relationship: <Relationship> {
-                name: 'sysUnderlyingType',
-                showFields: ['underlyingType', 'underlyingTypeDesc'],
+                name: 'SysUnderlyingType',
+                showFields: ['underlyingType', 'underlyingTypeDescription'],
                 idAttribute: 'underlyingType',
                 data: []
             }

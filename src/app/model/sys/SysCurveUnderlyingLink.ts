@@ -1,6 +1,4 @@
-import { DomsAccrualBasis } from "../doms/DomsAccrualBasis";
 import { Field, Model, Relationship } from "../Model";
-import { SysCurrency } from "./SysCurrency";
 
 export class SysCurveUnderlyingLink implements Model {
     
@@ -22,22 +20,24 @@ export class SysCurveUnderlyingLink implements Model {
             name: 'underlyingCode',
             label: 'Underlying Code',
             type: 'relationship',
+            length: 50,
             required: true,
             relationship: <Relationship> {
-                name: 'domsAccrualBasis',
-                showFields: ['domain', 'domainDesc'],
-                idAttribute: 'domain',
+                name: 'SysUnderlying',
+                showFields: ['underlyingCode', 'underlyingDescription'],
+                idAttribute: 'underlyingCode',
                 data: []
             }
         }, {
             name: 'curveName',
             label: 'Curve Name',
             type: 'relationship',
+            length: 50,
             required: true,
             relationship: <Relationship> {
-                name: 'sysCurve',
+                name: 'SysCurve',
                 showFields: ['curveName', 'curveDescription'],
-                idAttribute: 'LinkId',
+                idAttribute: 'curveName',
                 data: []
             }
         }

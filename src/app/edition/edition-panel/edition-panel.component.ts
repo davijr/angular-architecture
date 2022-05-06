@@ -1,3 +1,4 @@
+import { formatDate } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDrawer } from '@angular/material/sidenav';
@@ -60,7 +61,7 @@ export class EditionPanelComponent implements OnInit {
     this.routeSubscription = this.route.params.subscribe((params: any) => {
       ModelUtils.getModelInstance(this, params['editionModel']);
       if (!this.model) {
-        this.alertService.modalError("There is no valid entity selected.");
+        this.alertService.modalError("There is no valid model selected.");
       } else {
         this.buildFilterFields();
         this.onRefresh();
@@ -124,7 +125,7 @@ export class EditionPanelComponent implements OnInit {
   }
 
   onSave(modelEdit: any) {
-    if ('create' === this.editionMode) {
+    if (['create', 'copy'].includes(this.editionMode)) {
       this.progressService.showLoading();
       this.editionService.create(
         ModelUtils.parseToRequest(this.model.constructor.name, modelEdit)).subscribe(this.performAction('Create'));
@@ -193,7 +194,7 @@ export class EditionPanelComponent implements OnInit {
       const formElement: any = this.formFilter.get(element) || {};
       formElement.valueChanges
         .pipe(
-          map((value: string) => value?.trim()),
+          map((value: string) => (typeof value == 'string') ? value.trim() : value),
           // filter((value: string) => value.length > 1),
           debounceTime(200),
           distinctUntilChanged()
@@ -202,19 +203,28 @@ export class EditionPanelComponent implements OnInit {
   }
 
   filterItems(filterElement: any, filterValue: any) {
-    if (filterValue) {
+    if (filterValue && filterValue != 'null') {
       this.filterObject[filterElement] = filterValue;
     } else {
       delete  this.filterObject[filterElement];
     }
     this.items$ = this.itemsWithoutFilters$;
     this.items$ = this.items$.pipe(
-      map((mapObject: any) => mapObject.filter((item: any) => {
+      map((mapObject: any) => mapObject?.filter((item: any) => {
         // percorrer todos os campos de filtro preenchidos e filtrar os itens utilizando regra AND
         let matches = 0;
         Object.keys(this.filterObject).forEach((filterItem: string) => {
-          if (item[filterItem]?.toLowerCase().startsWith(this.filterObject[filterItem]?.toLowerCase())) {
-            matches++;
+          let itemValue = item[filterItem] || '';
+          const filterObjectValue = this.filterObject[filterItem] || '';
+          if (filterObjectValue instanceof Date) {
+            const dateCompare = formatDate(filterObjectValue,'yyyy-MM-dd','en_US');
+            if (itemValue === dateCompare) {
+              matches++;
+            }
+          } else if (typeof filterObjectValue === 'string') {
+            if (itemValue.toLowerCase().startsWith(filterObjectValue.toLowerCase())) {
+              matches++;
+            }
           }
         })
         return matches === Object.keys(this.filterObject).length;
