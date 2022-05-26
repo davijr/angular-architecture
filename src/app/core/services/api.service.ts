@@ -11,6 +11,10 @@ export class ApiService {
 
   constructor(private http: HttpClient) {}
 
+  async getAsync<T>(url: string) {
+    return await this.http.get<T>(`${this.API_URL}${url}`);
+  }
+
   getRequest<T>(url: string) {
     return this.http.get<T>(`${this.API_URL}${url}`);
   }

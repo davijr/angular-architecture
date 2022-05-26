@@ -14,20 +14,28 @@ export class EditionService {
 
   constructor(private apiService: ApiService) {}
 
+  getAttributes(request: RequestModel) {
+    return this.apiService.getRequest<ResponseModel>(`${this.BASE_URL}/model-attributes/${request.model}`).pipe(take(1));
+  }
+
+  getMenuOptions() {
+    return this.apiService.getRequest<ResponseModel>(`${this.BASE_URL}/menu-options`).pipe(take(1));
+  }
+
   find(request: RequestModel) {
-    return this.apiService.getRequest<ResponseModel>(`${this.BASE_URL}/${request.model}`).pipe(take(1));
+    return this.apiService.getRequest<ResponseModel>(`${this.BASE_URL}/model/${request.model}`).pipe(take(1));
   }
 
   create(request: RequestModel) {
-    return this.apiService.postRequest<ResponseModel>(`${this.BASE_URL}/${request.model}`, request.data).pipe(take(1));
+    return this.apiService.postRequest<ResponseModel>(`${this.BASE_URL}/model/${request.model}`, request.data).pipe(take(1));
   }
 
   update(request: RequestModel) {
-    return this.apiService.putRequest<ResponseModel>(`${this.BASE_URL}/${request.model}`, request.data).pipe(take(1));
+    return this.apiService.putRequest<ResponseModel>(`${this.BASE_URL}/model/${request.model}`, request.data).pipe(take(1));
   }
 
   delete(request: RequestModel) {
-    return this.apiService.deleteRequest<ResponseModel>(`${this.BASE_URL}/${request.model}/${request.data}`).pipe(take(1));
+    return this.apiService.deleteRequest<ResponseModel>(`${this.BASE_URL}/model/${request.model}/${request.data}`).pipe(take(1));
   }
 
 }

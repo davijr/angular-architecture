@@ -4,16 +4,32 @@
     <div class="text-end btn-close-container">
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="close('toggle button')"></button>
     </div>
-    <div *ngFor="let module of getMenuOptions()">
-      <div class="title-container" *ngIf="module.active">
-        <p><b>{{ module.name }}</b></p>
-        <div *ngFor="let item of module.items">
+    <accordion [closeOthers]="true" [isAnimated]="true">
+      <accordion-group *ngFor="let item of menuOptions" (isOpenChange)="onOpenEvent(item)">
+        <button
+          class="btn btn-link btn-block justify-content-between d-flex w-100  shadow-none"
+          accordion-heading type="button">
+          <div class="pull-left float-left">{{ item.name }}</div>
+          <mat-icon class="pull-right float-right" *ngIf="!item.expanded">expand_more</mat-icon>
+          <mat-icon class="pull-right float-right" *ngIf="item.expanded">expand_less</mat-icon>
+        </button>
+        <div *ngFor="let item of item.items">
+          <ul class="list-group" style="cursor: pointer;">
+            <li class="list-group-item" [routerLink]="[item.route, item.param]" (click)="sidenav.close()" *ngIf="item.active">&nbsp;&nbsp;{{ item.name }}</li>
+          </ul>
+        </div>
+      </accordion-group>
+    </accordion>
+    <!-- <div *ngFor="let item of menuOptions">
+      <div class="title-container" *ngIf="item.active">
+        <p><b>{{ item.name }}</b></p>
+        <div *ngFor="let item of item.items">
           <ul class="list-group" style="cursor: pointer;">
             <li class="list-group-item" [routerLink]="[item.route, item.param]" (click)="sidenav.close()" *ngIf="item.active">&nbsp;&nbsp;{{ item.name }}</li>
           </ul>
         </div>
       </div>
-    </div>
+    </div> -->
   </mat-sidenav>
 
   <mat-sidenav-content>

@@ -45,7 +45,7 @@ export class EditionPanelComponent implements OnInit {
    * Elements for Filter Component:
    */
   filterObject: any = {};
-  formFilter!: FormGroup;
+  formFilter: FormGroup;
   relationships: Relationship[] = [];
 
   constructor(
@@ -55,17 +55,22 @@ export class EditionPanelComponent implements OnInit {
     private alertService: AlertService,
     private formBuilder: FormBuilder,
     private route: ActivatedRoute) {
+      this.formFilter = new FormGroup({})
   }
   
   ngOnInit(): void {
-    this.routeSubscription = this.route.params.subscribe((params: any) => {
-      ModelUtils.getModelInstance(this, params['editionModel']);
-      if (!this.model) {
-        this.alertService.modalError("There is no valid model selected.");
-      } else {
-        this.buildFilterFields();
-        this.onRefresh();
-      }
+    this.drawer.close();
+    this.routeSubscription = this.route.params.subscribe(async (params: any) => {
+      const modelName = params['editionModel'];
+      this.editionService.getAttributes({model: modelName}).subscribe(model => {
+        this.model = model as any;
+        if (!this.model) {
+          this.alertService.modalError("There is no valid model selected.");
+        } else {
+          this.buildFilterFields();
+          this.onRefresh();
+        }
+      });
     });
   }
 
@@ -77,7 +82,7 @@ export class EditionPanelComponent implements OnInit {
     this.progressService.showLoading();
     this.clearFilter();
     const requestModel: RequestModel = {
-      model: this.model.constructor.name || '',
+      model: this.model.name,
       data: this.model,
       searchOptions: this.searchOptions
     };
@@ -127,12 +132,24 @@ export class EditionPanelComponent implements OnInit {
   onSave(modelEdit: any) {
     if (['create', 'copy'].includes(this.editionMode)) {
       this.progressService.showLoading();
-      this.editionService.create(
-        ModelUtils.parseToRequest(this.model.constructor.name, modelEdit)).subscribe(this.performAction('Create'));
+      this.editionService.create(ModelUtils.parseToRequest(this.model.constructor.name, modelEdit));/*.subscribe(() => {
+          this.performAction('Create');
+          this.progressService.hideLoading();
+        }, (error) => {
+          console.error(error);
+          this.alertService.toastError('Ocorreu um erro interno.');
+          this.progressService.hideLoading()
+        });*/
     } else if ('edit' === this.editionMode) {
       this.progressService.showLoading();
-      this.editionService.update(
-        ModelUtils.parseToRequest(this.model.constructor.name, modelEdit)).subscribe(this.performAction('Update'));
+      this.editionService.update(ModelUtils.parseToRequest(this.model.constructor.name, modelEdit));/*.subscribe(() => {
+          this.performAction('Update');
+          this.progressService.hideLoading();
+        }, (error) => {
+          console.error(error);
+          this.alertService.toastError('Ocorreu um erro interno.');
+          this.progressService.hideLoading()
+        });*/
     }
   }
 
@@ -163,6 +180,7 @@ export class EditionPanelComponent implements OnInit {
       error: () => this.alertService.toastError(`Error on trying to ${actionName.toUpperCase()}.`),
       complete: () => {
         this.onRefresh();
+        this.progressService.hideLoading();
         this.drawer.close();
       }
     }
