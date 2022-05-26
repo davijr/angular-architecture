@@ -9,7 +9,7 @@ import { ApiService } from '../../core/services/api.service';
 })
 export class OptionsService {
 
-  private readonly BASE_URL = 'edition';
+  private readonly BASE_URL = 'edition/model';
 
   constructor(private apiService: ApiService) {}
 

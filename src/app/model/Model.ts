@@ -1,5 +1,6 @@
 
 export interface Model {
+    name: string;
     readonly idField: string;
     readonly fields: Field[];
 }

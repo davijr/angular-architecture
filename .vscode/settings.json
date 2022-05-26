@@ -4,7 +4,7 @@
 
     "editor.codeActionsOnSave": { "source.fixAll.tslint": true},
     
-    "files.autoSave": "afterDelay",
+    "files.autoSave": "off",
     "files.autoSaveDelay": 10000,
 
     "prettier.tabWidth": 2,
