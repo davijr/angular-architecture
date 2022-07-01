@@ -4,9 +4,9 @@ import { catchError, of } from 'rxjs';
 import { Field, Model, Relationship } from 'src/app/model/Model';
 import { RequestModel } from 'src/app/model/utils/RequestModel';
 import { ResponseModel } from 'src/app/model/utils/ResponseModel';
-import { AlertService } from '../services/alert.service';
-import { OptionsService } from '../services/options.service';
-import { ProgressService } from '../services/progress.service';
+import { AlertService } from '../../services/alert.service';
+import { OptionsService } from '../../services/options.service';
+import { ProgressService } from '../../services/progress.service';
 
 @Component({
   selector: 'app-base-form',

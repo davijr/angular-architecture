@@ -1,10 +1,11 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-import { EditionPanelComponent } from "./edition-panel/edition-panel.component";
+import { AuthGuard } from "../authentication/guards/auth.guard";
+import { EditionPanelComponent } from "./pages/edition-panel/edition-panel.component";
 
 
 const editionRoutes: Routes = [
-    { path: 'edition/:editionModel', component: EditionPanelComponent},
+    { path: 'edition/:editionModel', component: EditionPanelComponent, canActivate: [AuthGuard]},
 ]
 
 @NgModule({

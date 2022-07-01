@@ -1,11 +1,11 @@
 import { NgModule } from "@angular/core";
 import { RouterModule, Routes } from "@angular/router";
-
-import { AppComponent } from "./app.component";
-import { LoginComponent } from "./authentication/login/login.component";
+import { AuthGuard } from "./authentication/guards/auth.guard";
+import { LoginComponent } from "./authentication/pages/login/login.component";
+import { HomeComponent } from "./core/pages/home/home.component";
 
 const appRoutes: Routes = [
-    { path: '', pathMatch: 'full', redirectTo: 'edition/SysExternalSystem' },
+    { path: '', component: HomeComponent, canActivate: [AuthGuard]},
     { path: 'login', component: LoginComponent }
 ]
 
