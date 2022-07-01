@@ -22,10 +22,14 @@ import { ApiService } from './core/services/api.service';
 import { EditionModule } from './edition/edition.module';
 import { SharedModule } from './shared/shared.module';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { AuthService } from './authentication/services/auth.service';
+import { AuthGuard } from './authentication/guards/auth.guard';
+import { HomeComponent } from './core/pages/home/home.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -54,7 +58,11 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     ModalModule.forRoot(),
     BsDatepickerModule.forRoot()
   ],
-  providers: [ApiService],
+  providers: [
+    ApiService,
+    AuthService,
+    AuthGuard
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

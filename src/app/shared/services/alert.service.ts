@@ -3,8 +3,8 @@ import { MatSnackBar, MatSnackBarConfig } from '@angular/material/snack-bar';
 import { BsModalRef, BsModalService, ModalOptions } from 'ngx-bootstrap/modal';
 import { Observable } from 'rxjs';
 import { AlertOptions } from 'src/app/model/utils/AlertOptions';
-import { AlertModalComponent } from 'src/app/shared/alert-modal/alert-modal.component';
-import { PromptModalComponent } from '../prompt-modal/prompt-modal.component';
+import { AlertModalComponent } from 'src/app/shared/components/alert-modal/alert-modal.component';
+import { PromptModalComponent } from '../components/prompt-modal/prompt-modal.component';
 
 @Injectable({
   providedIn: 'root'

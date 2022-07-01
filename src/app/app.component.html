@@ -1,8 +1,12 @@
 
 <mat-sidenav-container class="sidenav-container" (backdropClick)="close('backdrop')">
-  <mat-sidenav mode="over" class="sidenav" #sidenav (keydown.escape)="close('escape')" disableClose>
+  <mat-sidenav mode="over" class="sidenav" #sidenav (keydown.escape)="close('escape')" disableClose *ngIf="showMenu | async">
     <div class="text-end btn-close-container">
       <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" (click)="close('toggle button')"></button>
+    </div>
+    <div class="profile-content">
+      <mat-icon style="font-size: 50px; width: 50px; height: 50px;">account_circle</mat-icon>
+      <h3>{{ username }}</h3>
     </div>
     <accordion [closeOthers]="true" [isAnimated]="true">
       <accordion-group *ngFor="let item of menuOptions" (isOpenChange)="onOpenEvent(item)">
@@ -20,21 +24,18 @@
         </div>
       </accordion-group>
     </accordion>
-    <!-- <div *ngFor="let item of menuOptions">
-      <div class="title-container" *ngIf="item.active">
-        <p><b>{{ item.name }}</b></p>
-        <div *ngFor="let item of item.items">
-          <ul class="list-group" style="cursor: pointer;">
-            <li class="list-group-item" [routerLink]="[item.route, item.param]" (click)="sidenav.close()" *ngIf="item.active">&nbsp;&nbsp;{{ item.name }}</li>
-          </ul>
-        </div>
-      </div>
-    </div> -->
+    <br>
+    <div class="profile-content">
+      <button type="button" mat-raised-button color="tertiary" aria-label="Logout" tooltip="Logout"
+          class="mb-1 btn-sm" (click)="onLogout()">
+        <b>Logout</b>
+      </button>
+    </div>
   </mat-sidenav>
 
-  <mat-sidenav-content>
+  <mat-sidenav-content [ngClass]="{'bg-login-screen': isLoginScreen()}">
     <mat-toolbar color="primary">
-      <button mat-icon-button class="example-icon" aria-label="Menu" (click)="sidenav.open()">
+      <button mat-icon-button class="example-icon" aria-label="Menu" (click)="sidenav.open()" *ngIf="showMenu | async">
         <mat-icon>menu</mat-icon>
       </button>
       <span><b>{{ title }}</b></span>

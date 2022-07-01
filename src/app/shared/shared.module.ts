@@ -5,12 +5,12 @@ import { MatButtonModule } from '@angular/material/button';
 import { AlertModule } from 'ngx-bootstrap/alert';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 
-import { AlertModalComponent } from './alert-modal/alert-modal.component';
-import { DebugFormComponent } from './debug-form/debug-form.component';
-import { TableFormComponent } from './table-form/table-form.component';
+import { AlertModalComponent } from './components/alert-modal/alert-modal.component';
+import { DebugFormComponent } from './components/debug-form/debug-form.component';
+import { TableFormComponent } from './components/table-form/table-form.component';
 
 import { OptionsService } from './services/options.service'
-import { PromptModalComponent } from './prompt-modal/prompt-modal.component';
+import { PromptModalComponent } from './components/prompt-modal/prompt-modal.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 
 @NgModule({

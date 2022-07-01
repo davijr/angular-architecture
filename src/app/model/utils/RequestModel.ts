@@ -1,4 +1,4 @@
-import { SearchOptions } from "../SearchOptions";
+import { SearchOptions } from "./SearchOptions";
 
 export interface RequestModel {
     model: string;

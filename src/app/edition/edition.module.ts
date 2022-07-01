@@ -6,7 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { SharedModule } from '../shared/shared.module';
-import { EditionPanelComponent } from './edition-panel/edition-panel.component';
+import { EditionPanelComponent } from './pages/edition-panel/edition-panel.component';
 import { EditionRoutingModule } from './edition.routing';
 import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';

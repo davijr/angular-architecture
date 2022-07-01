@@ -5,14 +5,14 @@ import { MatDrawer } from '@angular/material/sidenav';
 import { ActivatedRoute } from '@angular/router';
 import { catchError, debounceTime, distinctUntilChanged, filter, first, map, Observable, of, Subject, Subscription, switchMap, tap } from 'rxjs';
 import { Field, Model, Relationship } from 'src/app/model/Model';
-import { SearchOptions } from 'src/app/model/SearchOptions';
+import { SearchOptions } from 'src/app/model/utils/SearchOptions';
 import { ModelUtils } from 'src/app/model/utils/ModelUtils';
 import { RequestModel } from 'src/app/model/utils/RequestModel';
 import { ResponseModel } from 'src/app/model/utils/ResponseModel';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { OptionsService } from 'src/app/shared/services/options.service';
 import { ProgressService } from 'src/app/shared/services/progress.service';
-import { EditionService } from '../services/edition.service';
+import { EditionService } from '../../services/edition.service';
 
 @Component({
   selector: 'app-edition-panel',
@@ -59,7 +59,6 @@ export class EditionPanelComponent implements OnInit {
   }
   
   ngOnInit(): void {
-    this.drawer.close();
     this.routeSubscription = this.route.params.subscribe(async (params: any) => {
       const modelName = params['editionModel'];
       this.editionService.getAttributes({model: modelName}).subscribe(model => {
@@ -79,6 +78,7 @@ export class EditionPanelComponent implements OnInit {
   }
 
   onRefresh() {
+    this.drawer.close();
     this.progressService.showLoading();
     this.clearFilter();
     const requestModel: RequestModel = {
@@ -130,26 +130,13 @@ export class EditionPanelComponent implements OnInit {
   }
 
   onSave(modelEdit: any) {
+    debugger
     if (['create', 'copy'].includes(this.editionMode)) {
       this.progressService.showLoading();
-      this.editionService.create(ModelUtils.parseToRequest(this.model.constructor.name, modelEdit));/*.subscribe(() => {
-          this.performAction('Create');
-          this.progressService.hideLoading();
-        }, (error) => {
-          console.error(error);
-          this.alertService.toastError('Ocorreu um erro interno.');
-          this.progressService.hideLoading()
-        });*/
+      this.editionService.create(ModelUtils.parseToRequest(this.model.name, modelEdit)).subscribe(this.performAction('Create'));
     } else if ('edit' === this.editionMode) {
       this.progressService.showLoading();
-      this.editionService.update(ModelUtils.parseToRequest(this.model.constructor.name, modelEdit));/*.subscribe(() => {
-          this.performAction('Update');
-          this.progressService.hideLoading();
-        }, (error) => {
-          console.error(error);
-          this.alertService.toastError('Ocorreu um erro interno.');
-          this.progressService.hideLoading()
-        });*/
+      this.editionService.update(ModelUtils.parseToRequest(this.model.name, modelEdit)).subscribe(this.performAction('Update'));
     }
   }
 
@@ -176,8 +163,11 @@ export class EditionPanelComponent implements OnInit {
 
   performAction(actionName: string) {
     return {
-      next: () => this.alertService.toastSuccess(`${actionName} with success!`),
-      error: () => this.alertService.toastError(`Error on trying to ${actionName.toUpperCase()}.`),
+      next: () => this.alertService.toastSuccess(`${actionName} action performed with success!`),
+      error: (error: any) => {
+        this.alertService.toastError(`${actionName} action performed with error! ${error.message}`);
+        this.progressService.hideLoading();
+      },
       complete: () => {
         this.onRefresh();
         this.progressService.hideLoading();

@@ -3,6 +3,7 @@ mat-sidenav-container {
   height: 100%;
 
   mat-sidenav {
+    background: #fafafa;
     width: 300px;
 
     .btn-close-container {
@@ -17,10 +18,21 @@ mat-sidenav-container {
         border-radius: 0;
       }
     }
+
+    .profile-content {
+      margin: 0 0 30px 0;
+      width: 100%;
+      text-align: center;
+    }
   }
 
   mat-sidenav-content {
     background-color: rgb(240 240 240);
+
+    &.bg-login-screen {
+      background: url(../assets/images/bg01.jpg) no-repeat center center fixed;
+      background-size: cover;
+    }
 
     .container {
       margin-top: 16px;

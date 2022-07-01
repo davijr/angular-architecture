@@ -1,5 +1,8 @@
 import { Component, ViewChild } from '@angular/core';
 import { MatSidenav } from '@angular/material/sidenav';
+import { Router } from '@angular/router';
+import { Observable } from 'rxjs';
+import { AuthService } from './authentication/services/auth.service';
 import { EditionService } from './edition/services/edition.service';
 import { ProgressService } from './shared/services/progress.service';
 
@@ -12,14 +15,22 @@ import { ProgressService } from './shared/services/progress.service';
 export class AppComponent {
   title = 'HSBC - BZDF Frontend';
   reason = '';
-  menuOptions: any = []
+  menuOptions: any = [];
+  showMenu = new Observable<boolean>();
+  username: string | null = null;
 
   @ViewChild('sidenav') sidenav!: MatSidenav;
 
   constructor(
+    public authService: AuthService,
+    private router: Router,
     public progressService: ProgressService,
     private editionService: EditionService) {
-      this.getMenuOptions();
+      this.showMenu = this.authService.isLoggedIn$;
+      if (!this.isLoginScreen()) {
+        this.getMenuOptions();
+        this.username = this.authService.getLoggedUser();
+      }
   }
 
   close(reason: string) {
@@ -37,5 +48,14 @@ export class AppComponent {
 
   onOpenEvent(item: any) {
     item.expanded = !item.expanded
+  }
+
+  isLoginScreen(): boolean {
+    return window.location.pathname === '/login';
+  }
+
+  onLogout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
   }
 }
