@@ -44,6 +44,7 @@ export class EditionPanelComponent implements OnInit {
   /**
    * Elements for Filter Component:
    */
+  showFilter = true;
   filterObject: any = {};
   formFilter: FormGroup;
   relationships: Relationship[] = [];
@@ -245,6 +246,10 @@ export class EditionPanelComponent implements OnInit {
     Object.keys(this.formFilter!.controls).forEach((element: any) => {
       this.formFilter!.get(element)?.setValue(null);
     });
+  }
+
+  showHideFilter(param: boolean) {
+    this.showFilter = param;
   }
 
   getRelationships() {
