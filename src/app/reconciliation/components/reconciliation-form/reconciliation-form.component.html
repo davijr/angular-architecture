@@ -1,0 +1,131 @@
+<div>
+    <form [formGroup]="form">
+        <div class="row">
+            <h3><b>{{ editionMode.toUpperCase() }} RECON DIMENSION GROUP</b></h3>
+        </div>
+
+        <mat-stepper #stepper orientation="vertical">
+            <!-- ACCOUNT -->
+            <mat-step [stepControl]="accountStepCtrl" label="General Ledger Reconciliation Definition">
+                <div class="row">
+                    <div class="col-4 form-group" [ngClass]="applyCssError('glAccountCode')">
+                        <label for="glAccountCode">Account<span class="required"> *</span></label>
+                        <div class="input-group">
+                            <input matInput type="text" id="glAccountCode" class="form-control" [ngClass]="applyCssError('accountFormCtrl')"
+                                formControlName="accountFormCtrl" [matAutocomplete]="auto" mask="0.0.00.000" [tooltip]="showTooltip('accountFormCtrl')">
+                            <div class="input-group-text" *ngIf="loadingStatus['accountFormCtrl']">
+                                <mat-spinner diameter="20"></mat-spinner>
+                            </div>
+                        </div>
+                        <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayAccountFn">
+                            <mat-option *ngFor="let option of allAccounts$ | async" [value]="option">
+                                {{ option.glAccountCode }} - 
+                                {{ option.glAccountName }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </div>
+                    <div class="col-6 form-group">
+                        <label for="description">Description</label>
+                        <input type="text" id="description" matInput class="form-control"
+                            [disabled]="true" [value]="getAccountDescription()">
+                    </div>
+                    <div class="col-2 form-group text-start">
+                        <br>
+                        <button type="button" mat-raised-button color="primary" (click)="onAddAccount()"
+                            [disabled]="isDisableAddAccountButton()">Add</button>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <table class="table table-hover table-sm" *ngIf="reconGlPoints.length > 0">
+                        <thead>
+                            <tr>
+                                <th class="align-middle">Account</th>
+                                <th class="align-middle">Description</th>
+                                <th class="align-middle text-center actions">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of reconGlPoints">
+                                <td class="align-middle">{{ item.glAccountCode }}</td>
+                                <td class="align-middle">{{ item.glAccountName }}</td>
+                                <td class="align-middle text-center actions">
+                                    <button mat-icon-button color="primary" aria-label="Delete" tooltip="Delete"
+                                        class="mb-1 btn-sm" (click)="onRemoveAccount(item)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </mat-step>
+            <!-- METRIC -->
+            <mat-step [stepControl]="reconciliationMetricStepCtrl" label="Reconciliation Metric">
+                <div class="row">
+                    <div class="col">
+                        <br>
+                        <label><i>Click to add a new one...</i></label>
+                        <br>
+                        <button type="button" mat-raised-button color="primary"
+                            (click)="openModalMetric(templateMetric, 'create', {})">Add</button>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <table class="table table-hover table-sm" *ngIf="reconDimensions.length > 0">
+                        <thead>
+                            <tr>
+                                <th class="align-middle">Metric</th>
+                                <th class="align-middle">Product</th>
+                                <th class="align-middle">Class</th>
+                                <th class="align-middle">Maps</th>
+                                <th class="align-middle text-center actions">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of reconDimensions">
+                                <td class="align-middle">{{ item.reconMetric?.reconMetricDescription }}</td>
+                                <td class="align-middle">{{ item.product?.productCode }}</td>
+                                <td class="align-middle">{{ item.domsGlClass?.domain }}</td>
+                                <td class="align-middle map-cell">
+                                    <mat-chip-list #mapChipList aria-label="Maps">
+                                        <mat-chip color="accent" *ngFor="let map of item.reconBzdfPoints"
+                                            tooltip="{{ map.reconMathOperator?.mathOperator }}">
+                                          {{ map.reconBzdfMap?.sourceTable }}.{{ map.reconBzdfMap?.sourceTableColumn }}
+                                        </mat-chip>
+                                    </mat-chip-list>
+                                </td>
+                                <td class="align-middle text-center actions">
+                                    <button type="button" mat-icon-button color="primary" aria-label="Edit" tooltip="Edit" class="mb-1 btn-sm"
+                                        (click)="onEditReconDimension(templateMetric, item)">
+                                      <mat-icon>edit</mat-icon>
+                                    </button>
+                                    <button type="button" mat-icon-button color="primary" aria-label="Delete" tooltip="Delete" class="mb-1 btn-sm"
+                                        (click)="onRemoveReconDimension(item)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </mat-step>
+        </mat-stepper>
+
+        <div class="form-group">
+            <button type="button" mat-raised-button color="default" (click)="onCancel()">Cancel</button>
+            <button type="button" mat-raised-button color="primary" [disabled]="false" (click)="submit()">Save</button>
+        </div>
+    </form>
+</div>
+
+<ng-template #templateMetric>
+    <div class="modal-header">
+      <p class="modal-title pull-left fs-4"><b>RECONCILIATION METRIC</b></p>
+    </div>
+    <div class="modal-body">
+        <app-reconciliation-metric-form [modelEdit]="modelEditMetric" (save)="onModalReconMetricSave($event)"
+            [editionMode]="editionModeMetric"></app-reconciliation-metric-form>
+    </div>
+</ng-template>

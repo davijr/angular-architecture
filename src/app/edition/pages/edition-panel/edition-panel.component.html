@@ -3,17 +3,19 @@
   <div class="card-header container">
     <div class="container">
       <div class="row justify-content-between">
-        <div class="col-8 title">
+        <div class="col-7 title">
           <div class="fw-bold fs-5">{{ beautifyName(model?.name) }}</div>
         </div>
-        <div class="col-2 actions text-end">
+        <div class="col-3 actions text-end">
           <button mat-icon-button color="primary" tooltip="Create" aria-label="Create" (click)="onCreate()"><mat-icon>add</mat-icon></button>
           <!-- <button mat-icon-button color="primary" tooltip="Clear" aria-label="Clear" (click)="clearFilter()"><mat-icon>filter_alt_off</mat-icon></button> -->
+          <button mat-icon-button color="primary" tooltip="Show Filters" aria-label="Show Filters" *ngIf="!showFilter" (click)="showHideFilter(true)"><mat-icon>visibility</mat-icon></button>
+          <button mat-icon-button color="primary" tooltip="Hide Filters" aria-label="Hide Filters" *ngIf="showFilter" (click)="showHideFilter(false)"><mat-icon>visibility_off</mat-icon></button>
           <button mat-icon-button color="primary" tooltip="Clear Filters" aria-label="Clear Filters" (click)="clearFilter()"><mat-icon>clear</mat-icon></button>
           <button mat-icon-button color="primary" tooltip="Refresh" aria-label="Refresh" (click)="onRefresh()"><mat-icon>refresh</mat-icon></button>
         </div>
       </div>
-      <div class="row filters" [formGroup]="formFilter">
+      <div class="row filters" [formGroup]="formFilter" *ngIf="showFilter">
         <div class="col-4 col-sm-3 form-group" *ngFor="let field of model?.fields">
           <div *ngIf="['text', 'number', 'email'].includes(field.type)">
             <label for="{{ field.name }}" tooltip="{{ field.label.length >= 20 ? field.label : '' }}">{{ field.label }}</label>

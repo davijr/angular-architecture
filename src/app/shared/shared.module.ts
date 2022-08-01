@@ -31,7 +31,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
   exports: [
     AlertModalComponent,
     PromptModalComponent,
-    TableFormComponent
+    TableFormComponent,
+    DebugFormComponent
   ],
   entryComponents: [
     AlertModalComponent,

@@ -25,6 +25,7 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
 import { AuthService } from './authentication/services/auth.service';
 import { AuthGuard } from './authentication/guards/auth.guard';
 import { HomeComponent } from './core/pages/home/home.component';
+import { ReconciliationModule } from './reconciliation/reconciliation.module';
 
 @NgModule({
   declarations: [
@@ -41,6 +42,7 @@ import { HomeComponent } from './core/pages/home/home.component';
     AuthenticationModule,
     // feature modules
     EditionModule,
+    ReconciliationModule,
     // routing modules
     AppRoutingModule,
     // material modules

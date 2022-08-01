@@ -1,0 +1,91 @@
+
+<div class="card mt-3">
+    <div class="card-header container">
+      <div class="container">
+        <div class="row justify-content-between">
+          <div class="col-7 title">
+            <div class="fw-bold fs-5">RECONCILIATION DIMENSION GROUP</div>
+          </div>
+          <div class="col-3 actions text-end">
+            <button mat-icon-button color="primary" tooltip="Create" aria-label="Create"><mat-icon>add</mat-icon></button>
+            <button mat-icon-button color="primary" tooltip="Refresh" aria-label="Refresh"><mat-icon>refresh</mat-icon></button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body table-responsive align-middle">
+
+        <mat-drawer-container class="container" autosize>
+            <div class="sidenav-content">
+
+                <div>
+                    <table class="table table-hover table-sm">
+                        <thead>
+                        <tr>
+                            <th class="align-middle">Dimension Group ID</th>
+                            <th class="align-middle">Accounts</th>
+                            <th class="align-middle text-center actions">ACTIONS</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let group of dimensionGroups">
+                            <td class="align-middle">{{ group.reconDimensionGroup }}</td>
+                            <td class="align-middle">
+                              <mat-chip-list #accountChipList aria-label="Accounts">
+                                <!-- <mat-chip>One fish</mat-chip>
+                                <mat-chip>Two fish</mat-chip>
+                                <mat-chip color="primary" selected>Primary fish</mat-chip> -->
+                                <mat-chip color="accent" selected tooltip="{{ group.genldgAccountPlan.glAccountName }}">
+                                  {{ group.genldgAccountPlan.glAccountCode }}
+                                </mat-chip>
+                                <input
+                                  class="chip-input"
+                                  placeholder="Account number..."
+                                  #accountInput
+                                  [matAutocomplete]="auto"
+                                  [matChipInputFor]="accountChipList"
+                                  [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                                  (matChipInputTokenEnd)="addAccount($event)">
+                              </mat-chip-list>
+                              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectAccount($event)">
+                                <mat-option *ngFor="let account of glAccounts | async" [value]="account">
+                                  {{ account }}
+                                </mat-option>
+                              </mat-autocomplete>
+                            </td>
+                            <td class="align-middle text-center actions">
+                            <button mat-icon-button color="primary" aria-label="Edit" tooltip="Edit" class="mb-1 btn-sm">
+                                <mat-icon>edit</mat-icon>
+                            </button>
+                            <button mat-icon-button color="primary" aria-label="Delete" tooltip="Delete" class="mb-1 btn-sm">
+                                <mat-icon>delete</mat-icon>
+                            </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <ng-template #isEmpty>
+                        <div class="is-empty">
+                        <p>Nothing to be shown.</p>
+                        </div>
+                    </ng-template>
+                </div>
+        
+                <ng-template #loading>
+                    <div class="loading-spinner-container">
+                        <mat-spinner></mat-spinner>
+                    </div>
+                </ng-template>
+            </div>
+        </mat-drawer-container>
+    </div>
+    <div class="card-footer">
+      <!-- <div class="form-group text-end">
+        <button mat-raised-button color="default" type="button">Cancel</button>
+        &nbsp;
+        <button mat-raised-button color="primary">Save</button>
+      </div> -->
+    </div>
+  </div>
+  
+  

@@ -44,6 +44,7 @@ export class EditionPanelComponent implements OnInit {
   /**
    * Elements for Filter Component:
    */
+  showFilter = true;
   filterObject: any = {};
   formFilter: FormGroup;
   relationships: Relationship[] = [];
@@ -130,7 +131,6 @@ export class EditionPanelComponent implements OnInit {
   }
 
   onSave(modelEdit: any) {
-    debugger
     if (['create', 'copy'].includes(this.editionMode)) {
       this.progressService.showLoading();
       this.editionService.create(ModelUtils.parseToRequest(this.model.name, modelEdit)).subscribe(this.performAction('Create'));
@@ -245,6 +245,10 @@ export class EditionPanelComponent implements OnInit {
     Object.keys(this.formFilter!.controls).forEach((element: any) => {
       this.formFilter!.get(element)?.setValue(null);
     });
+  }
+
+  showHideFilter(param: boolean) {
+    this.showFilter = param;
   }
 
   getRelationships() {

@@ -1,6 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Model, Relationship } from 'src/app/model/Model';
-import { environment } from 'src/environments/environment';
 import { BaseFormComponent } from '../base-form/base-form.component';
 import { AlertService } from '../../services/alert.service';
 import { OptionsService } from '../../services/options.service';
@@ -18,8 +17,6 @@ export class TableFormComponent extends BaseFormComponent implements OnInit {
   @Input() modelEdit!: Model;
   @Output() cancel = new EventEmitter<any>();
   @Output() save = new EventEmitter<any>();
-  
-  readonly debugForms = environment.debugForms;
   
   constructor(
     optionsService: OptionsService,
