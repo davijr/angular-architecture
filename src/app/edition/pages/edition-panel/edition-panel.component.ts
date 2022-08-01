@@ -131,7 +131,6 @@ export class EditionPanelComponent implements OnInit {
   }
 
   onSave(modelEdit: any) {
-    debugger
     if (['create', 'copy'].includes(this.editionMode)) {
       this.progressService.showLoading();
       this.editionService.create(ModelUtils.parseToRequest(this.model.name, modelEdit)).subscribe(this.performAction('Create'));

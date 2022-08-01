@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+
+import { environment } from 'src/environments/environment';import { Component, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { catchError, of } from 'rxjs';
 import { Field, Model, Relationship } from 'src/app/model/Model';
@@ -13,6 +14,8 @@ import { ProgressService } from '../../services/progress.service';
   template: '<div></div>'
 })
 export abstract class BaseFormComponent implements OnInit {
+  
+  readonly debugForms = environment.debugForms;
 
   model!: Model;
   form!: FormGroup;
@@ -21,9 +24,9 @@ export abstract class BaseFormComponent implements OnInit {
   formBuilder = new FormBuilder();
 
   constructor(
-    private optionsService: OptionsService,
-    private alertService: AlertService,
-    private progressService: ProgressService
+    public optionsService: OptionsService,
+    public alertService: AlertService,
+    public progressService: ProgressService
   ) {
     this.optionsService = optionsService;
     this.alertService = alertService;
@@ -51,16 +54,18 @@ export abstract class BaseFormComponent implements OnInit {
 
   buildFormGroup() {
     const formGroup: any = {};
-    this.model.fields.forEach((field: Field) => {
-      const validators: any[] = [];
-      if (field.required) {
-        validators.push(Validators.required);
-      }
-      if (field.length) {
-        validators.push(Validators.maxLength(field.length));
-      }
-      formGroup[field.name] = [null, validators];
-    });
+    if (this.model) {
+      this.model.fields.forEach((field: Field) => {
+        const validators: any[] = [];
+        if (field.required) {
+          validators.push(Validators.required);
+        }
+        if (field.length) {
+          validators.push(Validators.maxLength(field.length));
+        }
+        formGroup[field.name] = [null, validators];
+      });
+    }
     this.form = this.formBuilder.group(formGroup);
   }
 
@@ -140,6 +145,21 @@ export abstract class BaseFormComponent implements OnInit {
     return {
       'is-invalid': this.verifyValidTouched(fieldName)
     };
+  }
+
+  resetFields(controlNames: string[]) {
+    controlNames.forEach(controlName => {
+      this.form.get(controlName)?.setValue(null);
+      this.form.get(controlName)?.markAsPristine();
+      this.form.get(controlName)?.markAsUntouched();
+    });
+  }
+
+  showTooltip(fieldName: string) {
+    if (this.verifyValidTouched(fieldName)) {
+      return 'This field is mandatory.';
+    }
+    return undefined;
   }
 
 }

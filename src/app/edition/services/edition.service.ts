@@ -26,6 +26,17 @@ export class EditionService {
     return this.apiService.getRequest<ResponseModel>(`${this.BASE_URL}/model/${request.model}`).pipe(take(1));
   }
 
+  search(request: RequestModel) {
+    let url = `${this.BASE_URL}/model/${request.model}/search`;
+    if (request.searchOptions) {
+      url += '?';
+      Object.keys(request.searchOptions).forEach(key => {
+        url += `${key}=${(request.searchOptions as any)[key]}&`;
+      });
+    }
+    return this.apiService.postRequest<ResponseModel>(url, request.data).pipe(take(1));
+  }
+
   create(request: RequestModel) {
     return this.apiService.postRequest<ResponseModel>(`${this.BASE_URL}/model/${request.model}`, request.data).pipe(take(1));
   }

@@ -1,0 +1,130 @@
+<div [formGroup]="form">
+    <div class="row">
+        <div class="col-6 form-group" *ngIf="form.get('reconDimensionId')?.value">
+            <label for="reconDimensionId">Reconciliation Dimension ID</label>
+            <input matInput type="text" id="reconDimensionId" class="form-control"
+                formControlName="reconDimensionId" [disabled]="true">
+        </div>
+        <div class="col-6 form-group" [ngClass]="applyCssError('reconMetricId')">
+            <label for="reconMetricId">Reconciliation Metric<span class="required"> *</span></label>
+            <select name="reconMetricId" id="reconMetricId" class="form-select" [tooltip]="showTooltip('reconMetricId')"
+                formControlName="reconMetricId" [ngClass]="applyCssError('reconMetricId')">
+                <option [value]="null">Select</option>
+                <option *ngFor="let item of getOptions('ReconMetric')" [value]="item.reconMetricId">
+                    {{ item.reconMetricDescription }}
+                </option>
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6 form-group" [ngClass]="applyCssError('productCode')">
+            <label for="productCode">Product<span class="required"> *</span></label>
+            <div class="input-group">
+                <input matInput type="text" id="productCode" class="form-control" [ngClass]="applyCssError('productCode')"
+                    [matAutocomplete]="auto" maxlength="11" formControlName="productCode" [tooltip]="showTooltip('productCode')">
+                <div class="input-group-text" *ngIf="loadingStatus['productCode']">
+                    <mat-spinner diameter="20"></mat-spinner>
+                </div>
+            </div>
+            <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayProductFn">
+                <mat-option *ngFor="let option of allProducts$ | async" [value]="option">
+                    {{ option.productCode }} - 
+                    {{ option.productDescription }}
+                </mat-option>
+            </mat-autocomplete>
+        </div>
+        <div class="col-6 form-group" [ngClass]="applyCssError('productDescription')">
+            <label for="productDescription">Product Description</label>
+            <input type="text" id="productDescription" class="form-control" [ngClass]="applyCssError('productDescription')"
+                autocomplete="off" [disabled]="true" [value]="getProductDescription()">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-6 form-group" [ngClass]="applyCssError('glClass')">
+            <label for="glClass">Class<span class="required"> *</span></label>
+            <div class="input-group">
+                <input matInput type="text" id="glClass" class="form-control" [ngClass]="applyCssError('glClass')" [tooltip]="showTooltip('glClass')"
+                    [matAutocomplete]="autocompleteClass" autocomplete="off" maxlength="3" formControlName="glClass">
+                <div class="input-group-text" *ngIf="loadingStatus['glClass']">
+                    <mat-spinner diameter="20"></mat-spinner>
+                </div>
+            </div>
+            <mat-autocomplete #autocompleteClass="matAutocomplete" [displayWith]="displayClassFn">
+                <mat-option *ngFor="let option of allGlClasses$ | async" [value]="option">
+                    {{ option.domain }} - 
+                    {{ option.domainDesc }}
+                </mat-option>
+            </mat-autocomplete>
+        </div>
+        <div class="col-6 form-group" [ngClass]="applyCssError('glClassDescription')">
+            <label for="glClassDescription">Class Description</label>
+            <input type="text" id="glClassDescription" class="form-control" [ngClass]="applyCssError('glClassDescription')"
+                autocomplete="off" [disabled]="true" [value]="getGlClassDescription()">
+        </div>
+    </div>
+    <hr>
+    <div class="row">
+        <div class="col-5 form-group" [ngClass]="applyCssError('reconBzdfMapId')">
+            <label for="reconBzdfMapId">Source Table and Column<span class="required"> *</span></label>
+            <select name="reconBzdfMapId" id="reconBzdfMapId" class="form-select" [tooltip]="showTooltip('reconBzdfMapId')"
+                [ngClass]="applyCssError('reconBzdfMapId')" formControlName="reconBzdfMapId">
+                <option [ngValue]="null">Select</option>
+                <option *ngFor="let item of getOptions('ReconBzdfMap')" [ngValue]="item">
+                    {{ item.sourceTable }}.{{ item.sourceTableColumn }}
+                </option>
+            </select>
+        </div>
+        <div class="col-5 form-group" [ngClass]="applyCssError('mathOperatorId')">
+            <label for="mathOperatorId">Operator<span class="required"> *</span></label>
+            <select name="mathOperatorId" id="mathOperatorId" class="form-select" [tooltip]="showTooltip('mathOperatorId')"
+                [ngClass]="applyCssError('mathOperatorId')" formControlName="mathOperatorId">
+                <option [ngValue]="null">Select</option>
+                <option *ngFor="let item of getOptions('ReconMathOperator')" [ngValue]="item">
+                    {{ item.mathOperator }}
+                </option>
+            </select>
+        </div>
+        <div class="col-2 form-group text-start">
+            <br>
+            <button mat-raised-button color="primary" (click)="add()"
+                [disabled]="isDisableAddButton()">Add</button>
+        </div>
+    </div>
+</div>
+<br>
+<div class="row">
+    <div class="col">
+        <table class="table table-hover table-sm" *ngIf="reconBzdfPoints.length > 0">
+            <thead>
+                <tr>
+                    <th class="align-middle">Source Table and Column</th>
+                    <th class="align-middle">Operator</th>
+                    <th class="align-middle text-center actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let item of reconBzdfPoints">
+                    <td class="align-middle">
+                        {{ item.reconBzdfMap?.sourceTable }}.{{ item.reconBzdfMap?.sourceTableColumn }}
+                    </td>
+                    <td class="align-middle">
+                        {{ item.mathOperator }}
+                    </td>
+                    <td class="align-middle text-center actions">
+                        <button mat-icon-button color="primary" aria-label="Delete"
+                            tooltip="Delete" class="mb-1 btn-sm" (click)="delete(item)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<br>
+<div class="row modal-footer">
+    <div class="form-group text-end">
+        <button type="button" mat-raised-button color="default" type="button" (click)="close()">Cancel</button>
+        <button type="button" mat-raised-button color="primary" [disabled]="isDisableSubmitButton()" (click)="onSave()">Next</button>&nbsp;
+    </div>
+</div>
