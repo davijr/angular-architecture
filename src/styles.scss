@@ -61,3 +61,7 @@ button[disabled] {
   background: #ababab !important;
   color: #525252 !important;
 }
+
+.cdk-overlay-container {
+  z-index: 999999 !important;
+}

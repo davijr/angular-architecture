@@ -195,6 +195,16 @@ export class ReconciliationFormComponent extends BaseFormComponent implements On
     this.form.get('accountFormCtrl')?.updateValueAndValidity();
   }
 
+  checkFormValidation(): boolean {
+    if (this.reconGlPoints.length === 0) {
+      return false;
+    }
+    if (this.reconDimensions.length === 0) {
+      return false;
+    }
+    return true;
+  }
+
   /**
    * Actions for Recon Dimensions
    */

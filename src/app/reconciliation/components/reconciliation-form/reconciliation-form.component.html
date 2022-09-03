@@ -1,7 +1,7 @@
 <div>
     <form [formGroup]="form">
         <div class="row">
-            <h3><b>{{ editionMode.toUpperCase() }} RECON DIMENSION GROUP</b></h3>
+            <h3><b>{{ editionMode.toUpperCase() }} RECONCILIATION DIMENSION GROUP</b></h3>
         </div>
 
         <mat-stepper #stepper orientation="vertical">
@@ -115,7 +115,7 @@
 
         <div class="form-group">
             <button type="button" mat-raised-button color="default" (click)="onCancel()">Cancel</button>
-            <button type="button" mat-raised-button color="primary" [disabled]="false" (click)="submit()">Save</button>
+            <button type="button" mat-raised-button color="primary" [disabled]="!checkFormValidation()" (click)="submit()">Save</button>
         </div>
     </form>
 </div>

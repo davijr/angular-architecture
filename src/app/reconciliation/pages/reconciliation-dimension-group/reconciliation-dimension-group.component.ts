@@ -137,6 +137,18 @@ export class ReconciliationDimensionGroupComponent implements OnInit {
     }
   }
 
+  onDelete(model: Model): void {
+    this.modelEdit = model;
+    this.alertService.prompt().subscribe({
+      next: () => this.delete()
+    });
+  }
+
+  delete() {
+    this.progressService.showLoading();
+    this.reconciliationService.delete({data: this.modelEdit.reconDimensionGroup}).subscribe(this.performAction('Delete'));
+  }
+
   onCancel(event: any) {
     this.onExitEditMode();
     this.drawer.close();
