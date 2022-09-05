@@ -18,13 +18,6 @@ import { ReconciliationFormComponent } from './components/reconciliation-form/re
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatStepperModule } from '@angular/material/stepper';
 import { ReconciliationMetricFormComponent } from './components/reconciliation-metric-form/reconciliation-metric-form.component';
-import { IConfig, NgxMaskModule } from 'ngx-mask';
-
-const maskConfigFunction: () => Partial<IConfig> = () => {
-  return {
-    validation: false,
-  };
-};
 
 @NgModule({
   declarations: [
