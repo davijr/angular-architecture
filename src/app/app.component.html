@@ -19,7 +19,7 @@
         </button>
         <div *ngFor="let item of item.items">
           <ul class="list-group" style="cursor: pointer;">
-            <li class="list-group-item" [routerLink]="[item.route, item.param]" (click)="sidenav.close()" *ngIf="item.active">&nbsp;&nbsp;{{ item.name }}</li>
+            <li class="list-group-item" [routerLink]="item.param ? [item.route, item.param] : item.route" (click)="sidenav.close()" *ngIf="item.active">&nbsp;&nbsp;{{ item.name }}</li>
           </ul>
         </div>
       </accordion-group>
