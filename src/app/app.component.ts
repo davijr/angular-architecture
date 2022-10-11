@@ -18,6 +18,7 @@ export class AppComponent {
   menuOptions: any = [];
   showMenu = new Observable<boolean>();
   username: string | null = null;
+  lastLogin: string | null = null;
 
   @ViewChild('sidenav') sidenav!: MatSidenav;
 
@@ -30,6 +31,7 @@ export class AppComponent {
       if (!this.isLoginScreen()) {
         this.getMenuOptions();
         this.username = this.authService.getLoggedUser();
+        this.lastLogin = this.authService.getLastLogin();
       }
   }
 

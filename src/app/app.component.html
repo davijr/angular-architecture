@@ -29,7 +29,8 @@
       <button type="button" mat-raised-button color="primary" aria-label="Logout" tooltip="Logout"
           class="mb-1 btn-sm" (click)="onLogout()">
         <b>Logout</b>
-      </button>
+      </button><br><br>
+      <small><i>{{ lastLogin || '' }}</i></small>
     </div>
   </mat-sidenav>
 
