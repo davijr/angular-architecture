@@ -12,13 +12,15 @@ import { TableFormComponent } from './components/table-form/table-form.component
 import { OptionsService } from './services/options.service'
 import { PromptModalComponent } from './components/prompt-modal/prompt-modal.component';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
+import { PrettyJsonComponent } from './components/pretty-json/pretty-json.component';
 
 @NgModule({
   declarations: [
     AlertModalComponent,
     PromptModalComponent,
     DebugFormComponent,
-    TableFormComponent
+    TableFormComponent,
+    PrettyJsonComponent
   ],
   imports: [
     CommonModule,
@@ -32,7 +34,8 @@ import { BsDatepickerModule } from 'ngx-bootstrap/datepicker';
     AlertModalComponent,
     PromptModalComponent,
     TableFormComponent,
-    DebugFormComponent
+    DebugFormComponent,
+    PrettyJsonComponent
   ],
   entryComponents: [
     AlertModalComponent,

@@ -1,0 +1,89 @@
+
+<div class="card mt-3">
+  <div class="card-header container">
+    <div class="container">
+      <div class="row justify-content-between">
+        <div class="col-7 title">
+          <div class="fw-bold fs-5">USER ACCESS CONTROL</div>
+        </div>
+        <div class="col-3 actions text-end">
+          <button mat-icon-button color="primary" tooltip="Create" aria-label="Create" (click)="onCreate()"
+            *ngIf="this.editionMode !== 'edit'"><mat-icon>add</mat-icon></button>
+          <button mat-icon-button color="primary" tooltip="Refresh" aria-label="Refresh" (click)="onRefresh()"><mat-icon>refresh</mat-icon></button>
+          <!-- <button mat-icon-button color="primary" tooltip="Save" aria-label="Save"><mat-icon>save</mat-icon></button> -->
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="card-body table-responsive align-middle">
+
+    <mat-drawer-container class="container" autosize>
+      <mat-drawer #drawer class="sidenav" position="end" (closed)="onExitEditMode()">
+        <app-access-control-form [modelEdit]="modelEdit" (save)="onSave($event)" (cancel)="onCancel($event)" [editionMode]="editionMode"
+          *ngIf="modelEdit !== undefined && ['edit', 'create', 'copy'].includes(editionMode)"></app-access-control-form>
+      </mat-drawer>
+      <div class="sidenav-content">
+
+        <div *ngIf="items$ | async as items; else loading">
+            <table class="table table-hover table-sm" *ngIf="items.length > 0; else isEmpty">
+                <thead>
+                <tr>
+                  <!-- <th class="align-middle" *ngFor="let column of model.fields">{{ beautifyName(column.name) }}</th> -->
+                    <th class="align-middle">USER</th>
+                    <th class="align-middle">ROLES</th>
+                    <th class="align-middle">PERMISSIONS</th>
+                    <th class="align-middle text-center actions">ACTIONS</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let item of items">
+                    <td class="align-middle">{{ item.firstName }}</td>
+                    <td class="align-middle">
+                      <mat-chip-list #accountChipList aria-label="Roles">
+                        <mat-chip color="accent" *ngFor="let role of item.roles" [tooltip]="role.description">
+                          {{ role.name }}
+                        </mat-chip>
+                      </mat-chip-list>
+                    </td>
+                    <td class="align-middle">
+                      <mat-chip-list #accountChipList aria-label="Permissions">
+                        <mat-chip color="accent" *ngFor="let permission of item.permissions" [tooltip]="permission.description">
+                          {{ permission.name }}
+                        </mat-chip>
+                      </mat-chip-list>
+                    </td>
+                    <td class="align-middle text-center actions">
+                      <button mat-icon-button color="primary" aria-label="Edit" tooltip="Edit" class="mb-1 btn-sm" (click)="onEdit(item)">
+                          <mat-icon>edit</mat-icon>
+                      </button>
+                      <button mat-icon-button color="primary" aria-label="Delete" tooltip="Delete" class="mb-1 btn-sm" (click)="onDelete(item)">
+                          <mat-icon>delete</mat-icon>
+                      </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <ng-template #isEmpty>
+                <div class="is-empty">
+                <p>Nothing to be shown.</p>
+                </div>
+            </ng-template>
+        </div>
+
+        <ng-template #loading>
+            <div class="loading-spinner-container">
+                <mat-spinner></mat-spinner>
+            </div>
+        </ng-template>
+      </div>
+    </mat-drawer-container>
+  </div>
+  <div class="card-footer">
+    <!-- <div class="form-group text-end">
+      <button mat-raised-button color="default" type="button">Cancel</button>
+      &nbsp;
+      <button mat-raised-button color="primary">Save</button>
+    </div> -->
+  </div>
+</div>
+&nbsp;

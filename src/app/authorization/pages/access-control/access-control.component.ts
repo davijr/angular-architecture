@@ -1,10 +1,11 @@
-import {COMMA, ENTER} from '@angular/cdk/keycodes';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { FormBuilder, FormControl } from '@angular/forms';
+import { FormControl } from '@angular/forms';
 import { MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
 import { MatChipInputEvent } from '@angular/material/chips';
 import { MatDrawer } from '@angular/material/sidenav';
 import { catchError, map, Observable, of, startWith, Subject } from 'rxjs';
+import { UserService } from 'src/app/authentication/services/user.service';
 import { EditionService } from 'src/app/edition/services/edition.service';
 import { Model } from 'src/app/model/Model';
 import { ModelUtils } from 'src/app/model/utils/ModelUtils';
@@ -13,17 +14,17 @@ import { ResponseModel } from 'src/app/model/utils/ResponseModel';
 import { SearchOptions } from 'src/app/model/utils/SearchOptions';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { ProgressService } from 'src/app/shared/services/progress.service';
+import { AccessControlService } from '../../services/access-control.service';
 import { GlAccountService } from '../../services/gl-account.service';
-import { ReconciliationService } from '../../services/reconciliation.service';
 
 @Component({
-  selector: 'app-reconciliation-dimension-group',
-  templateUrl: './reconciliation-dimension-group.component.html',
-  styleUrls: ['./reconciliation-dimension-group.component.scss']
+  selector: 'app-access-control',
+  templateUrl: './access-control.component.html',
+  styleUrls: ['./access-control.component.scss']
 })
-export class ReconciliationDimensionGroupComponent implements OnInit {
+export class AccessControlComponent implements OnInit {
 
-  modelName = 'ReconDimensionGroup'
+  modelName = 'User'
 
   @ViewChild('drawer') drawer!: MatDrawer;
 
@@ -43,7 +44,7 @@ export class ReconciliationDimensionGroupComponent implements OnInit {
   separatorKeysCodes: number[] = [ENTER, COMMA];
   accountFormCtrl = new FormControl('');
   filteredAccounts!: Observable<string[]>;
-  allAccounts: string[] = ['1.3.1.10.03.1.001-3', '1.3.1.10.03.1.005-9', '1.3.1.10.03.1.006-8'];
+  allAccounts: string[] = [];
   
   // TODO SearchOptions
   searchOptions: SearchOptions = {
@@ -58,7 +59,8 @@ export class ReconciliationDimensionGroupComponent implements OnInit {
 
   constructor(
     private editionService: EditionService,
-    private reconciliationService: ReconciliationService,
+    private userService: UserService,
+    private accessControlService: AccessControlService,
     private glAccountService: GlAccountService,
     private progressService: ProgressService,
     private alertService: AlertService
@@ -93,7 +95,7 @@ export class ReconciliationDimensionGroupComponent implements OnInit {
       data: this.model,
       searchOptions: this.searchOptions
     };
-    this.items$ = this.reconciliationService.findMetrics()
+    this.items$ = this.userService.find()
       .pipe(
         map((response: any) => response.data),
         catchError(error => {
@@ -111,13 +113,6 @@ export class ReconciliationDimensionGroupComponent implements OnInit {
   onCreate(): void {
     this.editionMode = 'create';
     this.modelEdit = ModelUtils.parseModel(this.model, {});
-    this.modelEdit.fields?.push({
-      name: 'glAccountCode',
-      type: 'relationship',
-      relationship: {
-        name: 'GenldgAccountPlan'
-      }
-    })
     this.drawer.open();
   }
 
@@ -128,12 +123,11 @@ export class ReconciliationDimensionGroupComponent implements OnInit {
   }
 
   onSave(modelEdit: any) {
+    this.progressService.showLoading();
     if (['create', 'copy'].includes(this.editionMode)) {
-      this.progressService.showLoading();
-      this.reconciliationService.create({data: modelEdit}).subscribe(this.performAction('Create'));
+      this.accessControlService.create({data: modelEdit}).subscribe(this.performAction('Create'));
     } else if ('edit' === this.editionMode) {
-      this.progressService.showLoading();
-      this.reconciliationService.update({data: modelEdit}).subscribe(this.performAction('Update'));
+      this.accessControlService.create({data: modelEdit}).subscribe(this.performAction('Update'));
     }
   }
 
@@ -146,7 +140,7 @@ export class ReconciliationDimensionGroupComponent implements OnInit {
 
   delete() {
     this.progressService.showLoading();
-    this.reconciliationService.delete({data: this.modelEdit.reconDimensionGroup}).subscribe(this.performAction('Delete'));
+    this.accessControlService.delete({data: this.modelEdit.reconDimensionGroup}).subscribe(this.performAction('Delete'));
   }
 
   onCancel(event: any) {

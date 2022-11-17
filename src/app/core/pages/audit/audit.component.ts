@@ -12,15 +12,16 @@ import { ResponseModel } from 'src/app/model/utils/ResponseModel';
 import { AlertService } from 'src/app/shared/services/alert.service';
 import { OptionsService } from 'src/app/shared/services/options.service';
 import { ProgressService } from 'src/app/shared/services/progress.service';
-import { EditionService } from '../../services/edition.service';
+import { EditionService } from 'src/app/edition/services/edition.service';
+import { I } from '@angular/cdk/keycodes';
 
 @Component({
-  selector: 'app-edition-panel',
-  templateUrl: './edition-panel.component.html',
-  styleUrls: ['./edition-panel.component.scss'],
+  selector: 'app-audit',
+  templateUrl: './audit.component.html',
+  styleUrls: ['./audit.component.scss'],
   preserveWhitespaces: true
 })
-export class EditionPanelComponent implements OnInit {
+export class AuditComponent implements OnInit {
 
   @ViewChild('drawer') drawer!: MatDrawer;
 
@@ -36,8 +37,9 @@ export class EditionPanelComponent implements OnInit {
   
   searchOptions: SearchOptions = {
     page: 0,
-    limit: 100,
-    order: 'desc'
+    limit: 99,
+    order: 'desc',
+    orderBy: 'createdAt'
   }
   
   /**
@@ -60,7 +62,7 @@ export class EditionPanelComponent implements OnInit {
   
   ngOnInit(): void {
     this.routeSubscription = this.route.params.subscribe(async (params: any) => {
-      const modelName = params['editionModel'];
+      const modelName = 'Audit';
       this.editionService.getAttributes({model: modelName}).subscribe(model => {
         this.model = model as any;
         if (!this.model) {
@@ -156,8 +158,24 @@ export class EditionPanelComponent implements OnInit {
     return name?.replace(/([A-Z])/g, ' $1').trim().toUpperCase() ?? '';
   }
 
-  getKeys(item: any, columnName: string) {
-    return item[columnName];
+  getValues(item: any, column: any) {
+    const value = item[column.name];
+    if (column.type === 'date' && value) {
+      return new Date(value).toLocaleString();
+    }
+    return value;
+  }
+
+  getLength(item: any, column: any) {
+    const object = this.getValues(item, column)
+    if (!object) return 0
+    return Object.keys(object).length
+  }
+
+  getString(item: any, column: any) {
+    const object = this.getValues(item, column)
+    if (!object) return ''
+    return JSON.stringify(object)
   }
 
   performAction(actionName: string) {
@@ -181,7 +199,7 @@ export class EditionPanelComponent implements OnInit {
 
   buildFilterFields() {
     const formGroup: any = {};
-    this.model.fields.forEach((field: Field) => {
+    this.getItemsToFilter(this.model.fields).forEach((field: Field) => {
       const validators: any[] = [];
       if (field.required) {
         validators.push(Validators.required);
@@ -194,6 +212,10 @@ export class EditionPanelComponent implements OnInit {
     this.formFilter = this.formBuilder.group(formGroup);
     this.initFilters()
     this.getRelationships()
+  }
+
+  getItemsToFilter(fields: any): any[] {
+    return fields?.filter((f: any) => !['previousValues', 'currentValues'].includes(f.name))
   }
 
   initFilters() {
@@ -225,7 +247,8 @@ export class EditionPanelComponent implements OnInit {
           const filterObjectValue = this.filterObject[filterItem] || '';
           if (filterObjectValue instanceof Date) {
             const dateCompare = formatDate(filterObjectValue,'yyyy-MM-dd','en_US');
-            if (itemValue === dateCompare) {
+            const formattedDate = formatDate(itemValue,'yyyy-MM-dd','en_US');
+            if (formattedDate === dateCompare) {
               matches++;
             }
           } else if (typeof filterObjectValue === 'string') {

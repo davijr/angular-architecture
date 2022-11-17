@@ -1,0 +1,207 @@
+<div>
+    <form [formGroup]="form">
+        <div class="row">
+            <h3><b>{{ editionMode.toUpperCase() }} USER ACCESS CONTROL</b></h3>
+        </div>
+
+        <mat-stepper #stepper orientation="vertical">
+            <!-- USER -->
+            <mat-step [stepControl]="userStepCtrl" label="Select User">
+                <div class="row">
+                    <div class="col-4 form-group" [ngClass]="applyCssError('userFormCtrl')">
+                        <label for="userFormCtrl">Username<span class="required"> *</span></label>
+                        <div class="input-group">
+                            <input matInput type="text" id="userFormCtrl" class="form-control" [ngClass]="applyCssError('userFormCtrl')"
+                                [matAutocomplete]="userAutocomplete" maxlength="11" formControlName="userFormCtrl">
+                            <div class="input-group-text" *ngIf="loadingStatus['userFormCtrl']">
+                                <mat-spinner diameter="20"></mat-spinner>
+                            </div>
+                        </div>
+                        <mat-autocomplete #userAutocomplete="matAutocomplete" [displayWith]="displayUserFn">
+                            <mat-option *ngFor="let option of allUsers$ | async" [value]="option">
+                                {{ option.username }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </div>
+                    <div class="col-6 form-group">
+                        <label for="firstName">Full Name</label>
+                        <input type="text" id="description" class="form-control"
+                            autocomplete="off" [disabled]="true" [value]="getUserFullName()">
+                    </div>
+                </div>
+            </mat-step>
+            <mat-step [stepControl]="roleStepCtrl" label="Select Roles">
+                <div class="row">
+                    <div class="col-4 form-group" [ngClass]="applyCssError('roleFormCtrl')">
+                        <label for="roleFormCtrl">Role<span class="required"> *</span></label>
+                        <div class="input-group">
+                            <input matInput type="text" id="roleFormCtrl" class="form-control" [ngClass]="applyCssError('roleFormCtrl')"
+                                formControlName="roleFormCtrl" [matAutocomplete]="roleAutocomplete" [tooltip]="showTooltip('roleFormCtrl')">
+                            <div class="input-group-text" *ngIf="loadingStatus['roleFormCtrl']">
+                                <mat-spinner diameter="20"></mat-spinner>
+                            </div>
+                        </div>
+                        <mat-autocomplete #roleAutocomplete="matAutocomplete" [displayWith]="displayItemFn">
+                            <mat-option *ngFor="let option of allRoles$ | async" [value]="option">
+                                {{ option.name }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </div>
+                    <div class="col-6 form-group">
+                        <label for="description">Description</label>
+                        <input type="text" id="description" matInput class="form-control"
+                            [disabled]="true" [value]="getItemDescription('role')">
+                    </div>
+                    <div class="col-2 form-group text-start">
+                        <br>
+                        <button type="button" mat-raised-button color="primary" (click)="onAddItem('role')"
+                            [disabled]="isDisableAddItemButton('role')">Add</button>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <table class="table table-hover table-sm" *ngIf="roles.length > 0">
+                        <thead>
+                            <tr>
+                                <th class="align-middle">Name</th>
+                                <th class="align-middle">Description</th>
+                                <th class="align-middle text-center actions">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of roles">
+                                <td class="align-middle">{{ item.name }}</td>
+                                <td class="align-middle">{{ item.description }}</td>
+                                <td class="align-middle text-center actions">
+                                    <button mat-icon-button color="primary" aria-label="Delete" tooltip="Delete"
+                                        class="mb-1 btn-sm" (click)="onRemoveItem('role', item)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </mat-step>
+            <mat-step [stepControl]="permissionStepCtrl" label="Select Permissions">
+                <div class="row">
+                    <div class="col-4 form-group" [ngClass]="applyCssError('permissionFormCtrl')">
+                        <label for="permissionFormCtrl">Permission<span class="required"> *</span></label>
+                        <div class="input-group">
+                            <input matInput type="text" id="permissionFormCtrl" class="form-control" [ngClass]="applyCssError('permissionFormCtrl')"
+                                formControlName="permissionFormCtrl" [matAutocomplete]="permissionAutocomplete" [tooltip]="showTooltip('permissionFormCtrl')">
+                            <div class="input-group-text" *ngIf="loadingStatus['permissionFormCtrl']">
+                                <mat-spinner diameter="20"></mat-spinner>
+                            </div>
+                        </div>
+                        <mat-autocomplete #permissionAutocomplete="matAutocomplete" [displayWith]="displayItemFn">
+                            <mat-option *ngFor="let option of allPermissions$ | async" [value]="option">
+                                {{ option.name }}
+                            </mat-option>
+                        </mat-autocomplete>
+                    </div>
+                    <div class="col-6 form-group">
+                        <label for="description">Description</label>
+                        <input type="text" id="description" matInput class="form-control"
+                            [disabled]="true" [value]="getItemDescription('permission')">
+                    </div>
+                    <div class="col-2 form-group text-start">
+                        <br>
+                        <button type="button" mat-raised-button color="primary" (click)="onAddItem('permission')"
+                            [disabled]="isDisableAddItemButton('permission')">Add</button>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <table class="table table-hover table-sm" *ngIf="permissions.length > 0">
+                        <thead>
+                            <tr>
+                                <th class="align-middle">Name</th>
+                                <th class="align-middle">Description</th>
+                                <th class="align-middle text-center actions">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of permissions">
+                                <td class="align-middle">{{ item.name }}</td>
+                                <td class="align-middle">{{ item.description }}</td>
+                                <td class="align-middle text-center actions">
+                                    <button mat-icon-button color="primary" aria-label="Delete" tooltip="Delete"
+                                        class="mb-1 btn-sm" (click)="onRemoveItem('permission', item)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </mat-step>
+            <!-- METRIC -->
+            <!-- <mat-step [stepControl]="reconciliationMetricStepCtrl" label="Reconciliation Metric">
+                <div class="row">
+                    <div class="col">
+                        <br>
+                        <label><i>Click to add a new one...</i></label>
+                        <br>
+                        <button type="button" mat-raised-button color="primary"
+                            (click)="openModalMetric(templateMetric, 'create', {})">Add</button>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <table class="table table-hover table-sm" *ngIf="reconDimensions.length > 0">
+                        <thead>
+                            <tr>
+                                <th class="align-middle">Metric</th>
+                                <th class="align-middle">User</th>
+                                <th class="align-middle">Class</th>
+                                <th class="align-middle">Maps</th>
+                                <th class="align-middle text-center actions">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr *ngFor="let item of reconDimensions">
+                                <td class="align-middle">{{ item.reconMetric?.reconMetricDescription }}</td>
+                                <td class="align-middle">{{ item.user?.userCode }}</td>
+                                <td class="align-middle">{{ item.domsGlClass?.domain }}</td>
+                                <td class="align-middle map-cell">
+                                    <mat-chip-list #mapChipList aria-label="Maps">
+                                        <mat-chip color="accent" *ngFor="let map of item.reconBzdfPoints"
+                                            tooltip="{{ map.reconMathOperator?.mathOperator }}">
+                                          {{ map.reconBzdfMap?.sourceTable }}.{{ map.reconBzdfMap?.sourceTableColumn }}
+                                        </mat-chip>
+                                    </mat-chip-list>
+                                </td>
+                                <td class="align-middle text-center actions">
+                                    <button type="button" mat-icon-button color="primary" aria-label="Edit" tooltip="Edit" class="mb-1 btn-sm"
+                                        (click)="onEditReconDimension(templateMetric, item)">
+                                      <mat-icon>edit</mat-icon>
+                                    </button>
+                                    <button type="button" mat-icon-button color="primary" aria-label="Delete" tooltip="Delete" class="mb-1 btn-sm"
+                                        (click)="onRemoveReconDimension(item)">
+                                        <mat-icon>delete</mat-icon>
+                                    </button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </mat-step> -->
+        </mat-stepper>
+
+        <div class="form-group">
+            <button type="button" mat-raised-button color="default" (click)="onCancel()">Cancel</button>
+            <button type="button" mat-raised-button color="primary" [disabled]="!checkFormValidation()" (click)="submit()">Save</button>
+        </div>
+    </form>
+</div>
+
+<ng-template #templateMetric>
+    <div class="modal-header">
+      <p class="modal-title pull-left fs-4"><b>RECONCILIATION METRIC</b></p>
+    </div>
+    <div class="modal-body">
+        <!-- <app-reconciliation-metric-form [modelEdit]="modelEditMetric" (save)="onModalReconMetricSave($event)"
+            [editionMode]="editionModeMetric"></app-reconciliation-metric-form> -->
+    </div>
+</ng-template>
