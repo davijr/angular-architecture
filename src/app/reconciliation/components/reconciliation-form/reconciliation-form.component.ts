@@ -68,6 +68,7 @@ export class ReconciliationFormComponent extends BaseFormComponent implements On
   override ngOnInit(): void {
     this.model = this.modelEdit;
     this.initForm();
+    this.parseToEdit();
     this.form.addControl('accountFormCtrl', new FormControl('', Validators.required))
     if (this.editionMode === 'edit') {
       this.form.get(this.modelEdit.idField)?.disable();
@@ -89,8 +90,26 @@ export class ReconciliationFormComponent extends BaseFormComponent implements On
     this.save.emit(this.parseToSave());
   }
 
+  private parseToEdit() {
+    if (this.editionMode === 'edit') {
+      this.reconDimensions = (this.model as any).reconDimensions.map((a: any) => {
+        return {
+          ...a,
+          product: a.productCodeProduct,
+          domsGlClass: a.glClassDomsGlClass
+        }
+      });
+      this.reconGlPoints = (this.model as any).reconGlPoints.map((a: any) => {
+        return {
+          ...a.glAccountCodeGenldgAccountPlan
+        }
+      });
+    }
+  }
+
   private parseToSave() {
     return {
+      reconDimensionGroup: (this.model as any).reconDimensionGroup,
       reconGlPoints: this.reconGlPoints.map((a: any) => ({glAccountCode: a.glAccountCode})),
       reconDimensions: this.reconDimensions
     }
