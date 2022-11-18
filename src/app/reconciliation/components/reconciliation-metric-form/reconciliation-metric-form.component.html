@@ -108,7 +108,7 @@
                         {{ item.reconBzdfMap?.sourceTable }}.{{ item.reconBzdfMap?.sourceTableColumn }}
                     </td>
                     <td class="align-middle">
-                        {{ item.mathOperator }}
+                        {{ item.mathOperator.mathOperator ? item.mathOperator.mathOperator : item.mathOperator }}
                     </td>
                     <td class="align-middle text-center actions">
                         <button mat-icon-button color="primary" aria-label="Delete"

@@ -28,7 +28,8 @@
                 <thead>
                 <tr>
                   <!-- <th class="align-middle" *ngFor="let column of model.fields">{{ beautifyName(column.name) }}</th> -->
-                    <th class="align-middle">DIMENSION GROUP ID</th>
+                    <!-- <th class="align-middle">DIMENSION GROUP ID</th> -->
+                    <th class="align-middle">DIMENSION</th>
                     <th class="align-middle">ACCOUNTS</th>
                     <!-- <th class="align-middle">METRIC - PRODUCT - CLASS</th> -->
                     <th class="align-middle text-center actions">ACTIONS</th>
@@ -36,7 +37,16 @@
                 </thead>
                 <tbody>
                 <tr *ngFor="let item of items">
-                    <td class="align-middle">{{ item.reconDimensionGroup }}</td>
+                    <!-- <td class="align-middle">{{ item.reconDimensionGroup }}</td> -->
+                    <td class="align-middle">
+                      <mat-chip-list #reconDimensionsChipList aria-label="Metric">
+                        <mat-chip color="accent" *ngFor="let item of item.reconDimensions" tooltip="Metric - Product - Class">
+                          {{ item.reconMetric?.reconMetricDescription }} - 
+                          {{ item.productCodeProduct?.productCode }} - 
+                          {{ item.glClass }}
+                        </mat-chip>
+                      </mat-chip-list>
+                    </td>
                     <td class="align-middle">
                       <!-- <mat-form-field style="width: 100%" appearance="fill"> -->
                         <mat-chip-list #accountChipList aria-label="Accounts">
@@ -65,15 +75,6 @@
                     </td>
                     <td class="align-middle">
                       {{ item.reconDimensions[0]?.productCodeProduct?.productCode }} - {{ item.reconDimensions[0]?.productCodeProduct?.productDescription }}
-                    </td> -->
-                    <!-- <td class="align-middle">
-                      <mat-chip-list #reconDimensionsChipList aria-label="Metric">
-                        <mat-chip color="accent" *ngFor="let item of item.reconDimensions" tooltip="Metric - Product - Class">
-                          {{ item.reconMetric?.reconMetricDescription }} - 
-                          {{ item.productCodeProduct?.productCode }} - 
-                          {{ item.glClass }}
-                        </mat-chip>
-                      </mat-chip-list>
                     </td> -->
                     <!-- <td class="align-middle">{{ item.reconGlPoints[0]?.glAccountCodeGenldgAccountPlan?.glAccountCode }}</td> -->
                     <!-- <td class="align-middle">{{ item.reconDimensions[0]?.productCodeProduct?.productCode }}</td> -->
