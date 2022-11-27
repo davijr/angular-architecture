@@ -4,6 +4,7 @@ import { BehaviorSubject, catchError, take, tap, throwError } from 'rxjs';
 import { ApiService } from '../../core/services/api.service';
 import { User } from '../../model/User';
 import { ResponseModel } from '../../model/utils/ResponseModel';
+import { formatDate } from '@angular/common';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +13,9 @@ export class AuthService {
 
   private readonly BASE_URL = 'auth';
   private readonly BZDF_TOKEN = 'bzdf_auth';
+  private readonly BZDF_USER_PERMISSIONS = 'bzdf_user_permissions';
   private readonly LOGGED_USER = 'bzdf_username';
+  private readonly LOGGED_LAST_LOGIN = 'bzdf_last_login';
   private _isLoggedIn$ = new BehaviorSubject<boolean>(false);
   isLoggedIn$ = this._isLoggedIn$.asObservable();
 
@@ -46,6 +49,10 @@ export class AuthService {
     return localStorage.getItem(this.BZDF_TOKEN)
   }
 
+  getUserPermissions() {
+    return JSON.parse(localStorage.getItem(this.BZDF_USER_PERMISSIONS) || "") || []
+  }
+
   removeJwtToken() {
     localStorage.removeItem(this.BZDF_TOKEN)
   }
@@ -59,7 +66,9 @@ export class AuthService {
         this._isLoggedIn$.next(true);
         this.showMenuEmitter.emit(true);
         localStorage.setItem(this.BZDF_TOKEN, res.data.token)
+        localStorage.setItem(this.BZDF_USER_PERMISSIONS, res.data.permissions)
         localStorage.setItem(this.LOGGED_USER, '' + this.loggedUser?.username)
+        localStorage.setItem(this.LOGGED_LAST_LOGIN, '' + this.loggedUser?.lastLogin)
         return this.loggedUser;
       }),
       catchError((error) => {
@@ -77,5 +86,13 @@ export class AuthService {
 
   getLoggedUser() {
     return localStorage.getItem(this.LOGGED_USER);
+  }
+
+  getLastLogin() {
+    const date = localStorage.getItem(this.LOGGED_LAST_LOGIN);
+    if (date && date !== 'null') {
+      return 'Last login: ' + formatDate('' + date, 'yyyy-MM-dd HH:mm','en_US');
+    }
+    return '';
   }
 }

@@ -4,10 +4,11 @@
     <div class="container">
       <div class="row justify-content-between">
         <div class="col-7 title">
-          <div class="fw-bold fs-5">{{ beautifyName(model?.name) }}</div>
+          <div class="fw-bold fs-5">{{ beautifyName(model?.modelName) }}</div>
         </div>
         <div class="col-3 actions text-end">
-          <button mat-icon-button color="primary" tooltip="Create" aria-label="Create" (click)="onCreate()"><mat-icon>add</mat-icon></button>
+          <button mat-icon-button color="primary" tooltip="Create" aria-label="Create" (click)="onCreate()"
+            *ngIf="this.editionMode !== 'edit'"><mat-icon>add</mat-icon></button>
           <!-- <button mat-icon-button color="primary" tooltip="Clear" aria-label="Clear" (click)="clearFilter()"><mat-icon>filter_alt_off</mat-icon></button> -->
           <button mat-icon-button color="primary" tooltip="Show Filters" aria-label="Show Filters" *ngIf="!showFilter" (click)="showHideFilter(true)"><mat-icon>visibility</mat-icon></button>
           <button mat-icon-button color="primary" tooltip="Hide Filters" aria-label="Hide Filters" *ngIf="showFilter" (click)="showHideFilter(false)"><mat-icon>visibility_off</mat-icon></button>

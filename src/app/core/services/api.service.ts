@@ -15,8 +15,8 @@ export class ApiService {
     return await this.http.get<T>(`${this.API_URL}${url}`);
   }
 
-  getRequest<T>(url: string) {
-    return this.http.get<T>(`${this.API_URL}${url}`);
+  getRequest<T>(url: string, options: any = {}) {
+    return this.http.get<T>(`${this.API_URL}${url}`, options);
   }
 
   postRequest<T>(url: string, data: any) {

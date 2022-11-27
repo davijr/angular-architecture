@@ -26,6 +26,7 @@ import { AuthService } from './authentication/services/auth.service';
 import { AuthGuard } from './authentication/guards/auth.guard';
 import { HomeComponent } from './core/pages/home/home.component';
 import { ReconciliationModule } from './reconciliation/reconciliation.module';
+import { AuthorizationModule } from './authorization/authorization.module';
 
 @NgModule({
   declarations: [
@@ -43,6 +44,7 @@ import { ReconciliationModule } from './reconciliation/reconciliation.module';
     // feature modules
     EditionModule,
     ReconciliationModule,
+    AuthorizationModule,
     // routing modules
     AppRoutingModule,
     // material modules

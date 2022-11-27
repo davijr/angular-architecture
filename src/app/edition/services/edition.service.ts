@@ -23,7 +23,7 @@ export class EditionService {
   }
 
   find(request: RequestModel) {
-    return this.apiService.getRequest<ResponseModel>(`${this.BASE_URL}/model/${request.model}`).pipe(take(1));
+    return this.apiService.getRequest<ResponseModel>(`${this.BASE_URL}/model/${request.model}`, {params: request.searchOptions}).pipe(take(1));
   }
 
   search(request: RequestModel) {

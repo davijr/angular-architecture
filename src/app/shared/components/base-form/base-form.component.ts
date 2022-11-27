@@ -45,7 +45,9 @@ export abstract class BaseFormComponent implements OnInit {
 
   onSubmit(): void {
     if (this.form.valid) {
-      this.submit(this.form.getRawValue());
+      const object: any = this.form.getRawValue();
+      object[this.model.idField] = (this.model as any)[this.model.idField];
+      this.submit(object);
     } else {
       this.alertService.toastError("There is validations errors. Please, verify the fields.");
       this.verifyFormValidations(this.form);
@@ -85,7 +87,7 @@ export abstract class BaseFormComponent implements OnInit {
             this.progressService.hideLoading();
             return of()
           })
-        ).subscribe((response: ResponseModel) => {
+        ).subscribe((response: any) => {
           relationship.data = response.data;
           this.relationships.push(relationship);
           this.progressService.hideLoading();
@@ -102,7 +104,6 @@ export abstract class BaseFormComponent implements OnInit {
 
   verifyFormValidations(formGroup: FormGroup | FormArray) {
     Object.keys(formGroup.controls).forEach(field => {
-      console.log(field);
       const control = formGroup.get(field) ?? new FormControl();
       control.markAsDirty();
       control.markAsTouched();

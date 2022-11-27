@@ -7,7 +7,8 @@
           <div class="fw-bold fs-5">RECONCILIATION DIMENSION GROUP</div>
         </div>
         <div class="col-3 actions text-end">
-          <button mat-icon-button color="primary" tooltip="Create" aria-label="Create" (click)="onCreate()"><mat-icon>add</mat-icon></button>
+          <button mat-icon-button color="primary" tooltip="Create" aria-label="Create" (click)="onCreate()"
+            *ngIf="this.editionMode !== 'edit'"><mat-icon>add</mat-icon></button>
           <!-- <button mat-icon-button color="primary" tooltip="Refresh" aria-label="Refresh" (click)="onRefresh()"><mat-icon>refresh</mat-icon></button> -->
           <!-- <button mat-icon-button color="primary" tooltip="Save" aria-label="Save"><mat-icon>save</mat-icon></button> -->
         </div>
